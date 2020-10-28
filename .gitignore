@@ -1,0 +1,27 @@
+venv
+datasets
+logs
+test_masks
+test_mask2
+train_masks
+train_mask2
+mask_rcnn_coco.h5
+mask.npy
+train_examples.csv
+val_examples.csv
+.ipynb_checkpoints
+generate
+example
+Plot_PR_and_test_masks.py
+test.py
+__pycache__
+DataPreparation
+Annotation projects
+junk
+20130320T004849.903118.Cam6_43_mask2.npy
+20151124T044642.641468_i2238j1002_mask2.npy
+_MG_8993_24_mask2.npy
+20130320T004547.804094.Cam6_12_mask2.npy
+20130320T004620.376266.Cam6_41_mask2.npy
+20151124T024524.796253_i1870j760_mask2.npy
+_MG_8080_08_mask2.npy

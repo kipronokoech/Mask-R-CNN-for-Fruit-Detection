@@ -1,0 +1,42 @@
+[
+   {
+      "filename": "_MG_8993_24",
+      "TP": 14,
+      "FP": 6,
+      "FN": 6,
+      "Precision": 0.7,
+      "Recall": 0.7,
+      "Detections": 20,
+      "GT": 20
+   },
+   {
+      "filename": "20130320T004849.903118.Cam6_43",
+      "TP": 5,
+      "FP": 2,
+      "FN": 2,
+      "Precision": 0.7142857142857143,
+      "Recall": 0.7142857142857143,
+      "Detections": 7,
+      "GT": 7
+   },
+   {
+      "filename": "20151124T044642.641468_i2238j1002",
+      "TP": 17,
+      "FP": 0,
+      "FN": 3,
+      "Precision": 1.0,
+      "Recall": 0.85,
+      "Detections": 17,
+      "GT": 20
+   },
+   {
+      "Total TP": 36,
+      "Total FP": 8,
+      "TOtal FN": 11,
+      "All Detections": 44,
+      "All GT": 47,
+      "TP(%)": 0.8181818181818182,
+      "FP(%)": 0.18181818181818182,
+      "FN": 0.25
+   }
+]

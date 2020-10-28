@@ -1,0 +1,52 @@
+[
+   {
+      "filename": "20130320T004547.804094.Cam6_12",
+      "TP": 5,
+      "FP": 0,
+      "FN": 0,
+      "Precision": 1.0,
+      "Recall": 1.0,
+      "Detections": 5,
+      "GT": 5
+   },
+   {
+      "filename": "20151124T024524.796253_i1870j760",
+      "TP": 12,
+      "FP": 0,
+      "FN": 1,
+      "Precision": 1.0,
+      "Recall": 0.9230769230769231,
+      "Detections": 12,
+      "GT": 13
+   },
+   {
+      "filename": "_MG_8080_08",
+      "TP": 19,
+      "FP": 0,
+      "FN": 6,
+      "Precision": 1.0,
+      "Recall": 0.76,
+      "Detections": 19,
+      "GT": 25
+   },
+   {
+      "filename": "20130320T004620.376266.Cam6_41",
+      "TP": 3,
+      "FP": 0,
+      "FN": 6,
+      "Precision": 1.0,
+      "Recall": 0.3333333333333333,
+      "Detections": 3,
+      "GT": 9
+   },
+   {
+      "Total TP": 39,
+      "Total FP": 0,
+      "TOtal FN": 13,
+      "All Detections": 39,
+      "All GT": 52,
+      "TP(%)": 1.0,
+      "FP(%)": 0.0,
+      "FN": 0.3333333333333333
+   }
+]
