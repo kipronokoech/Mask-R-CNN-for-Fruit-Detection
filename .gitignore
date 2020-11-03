@@ -1,5 +1,6 @@
 venv
-datasets/fruits/*
+!datasets/fruits/train/*
+!datasets/fruits/val/*
 logs
 test_masks
 test_mask2
