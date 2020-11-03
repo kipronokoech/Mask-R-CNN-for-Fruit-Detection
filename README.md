@@ -36,8 +36,8 @@ Repository: Mask-R-CNN-for-Fruit-Detection
 ```bash
 Root:
 ├── Python
-├── assets├── datasets├── fruits├── train > (train images and annotation file.)
-│         │                     ├── val > (test images and annotation file.)
+├── assets├── datasets├── fruits├── train > (4 sample images and annotation file.)
+│         │                     ├── val > (3 sample images and annotation file.)
 │         ├── history > training-stats
 │         ├── logs > trained-models
 ├── evaluation
@@ -77,11 +77,21 @@ Root:
 [here.](http://www.robots.ox.ac.uk/~vgg/software/via/via.html)
 
 ## Setup
-- Clone the repository
-- Python virtual environment - Link this to my Medium article.
+- Clone this repository
+- [Optional] Set up Python virtual environment - You may find [this article](https://medium.com/analytics-vidhya/creating-python-virtual-environment-and-how-to-add-it-to-jupyter-notebook-4cdb41717582) helpful.
 - Upgrade pip and setup tools
-- Requirements on requirement.txt
-- Link to the dataset and anotations
+```bash
+pip install -U setuptools
+python3 -m pip install --upgrade pip
+```
+- Install the dependencies from [requirements.txt](requirements.txt)
+```bash
+pip3 install -r requirements.txt
+```
+- Download the datasets and Mask R-CNN pre-trained weights [[link]](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing) into corresponding folders. The pretrained weights can be donwloaded [here](https://github.com/matterport/Mask_RCNN/releases) as well. The weights should be saved in [assets](assets) folder
+- (Optional) The trained model (trained_model/mask_rcnn_fruit_0477.h5) used to generate the results is part of the content of the above link. If are interested in reproducing the results without training the model place this file should be placed in the [logs](assets/logs) folder. 
+
+
 
 ## Training progress plot
 
