@@ -5,14 +5,14 @@
 - Upgrade pip and setup tools
 - Requirements on requirement.txt
 - Link to the dataset and anotations
-## Data Structure
+
+## Directory Structure
 (Include the tree and the description)
 - Python
 - assets
 - evaluation
 - mrcnn
 - the rest of the files
-
 
 ## Sample images in the dataset
 

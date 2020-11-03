@@ -1,5 +1,5 @@
 venv
-datasets
+datasets/fruits/*
 logs
 test_masks
 test_mask2
