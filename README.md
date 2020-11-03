@@ -1,10 +1,9 @@
 # Mask R-CNN for Fruit Detection in an Orchard 
 ## Dataset
 The dataset used in this project were collected from 3 sources namely:
-	- Aerobotics dataset - The images are sourced by flying the drone ∼ 2m above the tree canopy
-	which generates 2.7k video imagery. These short videos are then segmented to generate images. 
-	- FUJI dataset [link](https://zenodo.org/record/3715991)
-	- ACFR dataset [link](http://data.acfr.usyd.edu.au/ag/treecrops/2016-multifruit/)
+- Aerobotics dataset - The images are sourced by flying the drone ∼ 2m above the tree canopy which generates 2.7k video imagery. These short videos are then segmented to generate images. 
+- FUJI dataset [link](https://zenodo.org/record/3715991)
+- ACFR dataset [link](http://data.acfr.usyd.edu.au/ag/treecrops/2016-multifruit/)
 ## Setup
 - Python virtual environment - Link this to my Medium article.
 - Upgrade pip and setup tools
@@ -53,7 +52,7 @@ Repository: Mask-R-CNN-for-Fruit-Detection
 
 	- `MaskReconstruction.py` - This script contains all functions related to manipulation of model output from contour reconstruction to drawing and writing contors.
 	- `runMain.py` - Running this script calls MaskRCNN_Evaluation class in Evaluation.py. The script is mainly used to generate and save the results (important).
-- `mrcnn` - this folder contains all the core files needed to train Mask R-CNN. The model itself is defined in `model.py`. Other files in the folder includes `config.py` (contains Configuration class for Mask R-), `parallel_model.py` (to set up parallel processing), `utils.py` (contains common utility functions and classes), `visualize.py` (facilitate visualization of model output).
+- `mrcnn` - this folder contains all the core files needed to train Mask R-CNN. The model itself is defined in `model.py`. Other files in the folder includes `config.py` (contains Configuration class for Mask R-CNN), `parallel_model.py` (to set up parallel processing), `utils.py` (contains common utility functions and classes), `visualize.py` (facilitate visualization of model output).
 - `requirements.txt` - contains all the libraries and packages required run the model. Specific versions of libraries are defined to ease reproducibility.
 - `setup.py` - This file is executed as a part of setup process. The process installs the necessary dependencies that are missing. Once you have gone through `Setup` section executing this file won't be necessary.
 - `via.html` - This is fully-fledged VGG annotator. The online version of the annotator can be accessed here.
