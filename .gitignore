@@ -1,7 +1,13 @@
 venv
-!datasets/fruits/train/*
-!datasets/fruits/val/*
 logs
+20130320T004547.804094.Cam6_12.png
+20130320T004620.376266.Cam6_41.png
+20151124T024524.796253_i1870j760.png
+20130320T004849.903118.Cam6_43.png
+20151124T044642.641468_i2238j1002.png
+_MG_8993_24.jpg
+_MG_8080_08.jpg
+via_project*
 test_masks
 test_mask2
 train_masks
