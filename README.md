@@ -56,8 +56,8 @@ Root:
 
 ## Detailed description of repository content
 - `Python` - This folder contains `fruits.ipynb` notebook. Mask R-CNN model is trained and tested in this notebook.
-- `assets` - This folder contains 3 sub-directories datasets, history, and logs:
-	- datasets/fruits/train - this folder consist of training images and corresponding JSON annotations file.
+- [assets](assets) - This folder contains 3 sub-directories datasets, history, and logs:
+	- [datasets/fruits/train]() - this folder consist of training images and corresponding JSON annotations file.
 	- datasets/fruits/val - contains testing images and the JSON file with the annotations.
 	- history - this directory holds (will hold) the training statistics - accuracy and losses.
 	- logs - trained model is saved here. For any particular model training instance a subdirectory will be created and model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the reposity contains  fruit20200802T0017 for the model training that was initiated on Aug,2 2020 at 0017. 
@@ -73,10 +73,11 @@ Root:
 - `mrcnn` - this folder contains all the core files needed to train Mask R-CNN. The model itself is defined in `model.py`. Other files in the folder includes `config.py` (contains Configuration class for Mask R-CNN), `parallel_model.py` (to set up parallel processing), `utils.py` (contains common utility functions and classes), `visualize.py` (facilitate visualization of model output).
 - `requirements.txt` - contains all the libraries and packages required run the model. Specific versions of libraries are defined to ease reproducibility.
 - `setup.py` - This file is executed as a part of setup process. The process installs the necessary dependencies that are missing. Once you have gone through `Setup` section executing this file won't be necessary.
-- `via.html` - This is fully-fledged VGG annotator. The online version of the annotator can be accessed here.
+- `via.html` - This is fully-fledged VGG annotator. The online version of the annotator can be accessed
 [here.](http://www.robots.ox.ac.uk/~vgg/software/via/via.html)
 
 ## Setup
+- Clone the repository
 - Python virtual environment - Link this to my Medium article.
 - Upgrade pip and setup tools
 - Requirements on requirement.txt
