@@ -13,22 +13,19 @@ The dataset used in this project were collected from 3 sources namely:
 ## Directory Structure
 Repository: Mask-R-CNN-for-Fruit-Detection
 ```bash
-├── app
-│   ├── css
-│   │   ├── **/*.css
-│   ├── favicon.ico
-│   ├── images
-│   ├── index.html
-│   ├── js
-│   │   ├── **/*.js
-│   └── partials/template
+Root:
 ├── Python
 ├── assets├── datasets├── fruits├── train > (train images and annotation file.)
 │         │                     ├── val > (test images and annotation file.)
-│         ├── history
-│         ├── logs 
+│         ├── history > training-stats
+│         ├── logs > trained-models
 ├── evaluation
-├── mrcnn
+├── mrcnn├── __init__.py
+│        ├── config.py   
+│        ├── model.py
+│        ├── parallel_model.py
+│        ├── utils.py
+│        ├── visualize.py
 ├── setup.py
 ├── README.md
 ├── requirements.txt
