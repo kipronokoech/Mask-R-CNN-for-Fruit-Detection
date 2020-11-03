@@ -2,35 +2,34 @@
 ## Dataset
 The dataset used in this project were collected from 3 sources namely:
 - Aerobotics dataset - The images are sourced by flying the drone ∼ 2m above the tree canopy which generates 2.7k video imagery. These short videos are then segmented to generate images. 
-- FUJI dataset [link](https://zenodo.org/record/3715991)
-- ACFR dataset [link](http://data.acfr.usyd.edu.au/ag/treecrops/2016-multifruit/)
+- FUJI dataset [link](https://zenodo.org/record/3715991).
+- ACFR dataset [link](http://data.acfr.usyd.edu.au/ag/treecrops/2016-multifruit/).
 
-The total number of images collected from these three sources are 2853 - 2081 images used for training the model and 772 for testing. All the images (both train and test set) were annotated using VGG. The entire dataset with the annotations can be downloaded [here](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing). The contents of the link has the following structure:
+A total of 2853 images were collected from above three sources - 2081 images used for training the model and 772 for testing. All the images (both train and test set) were manually annotated using VGG annotator[[link]](http://www.robots.ox.ac.uk/~vgg/software/via/via.html). The entire dataset with the annotations can be downloaded [here](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing). The contents of the link has the following structure:
 ```bash
 Root: Mask-RCNN-for-Fruit_Detection
 ├── Python
 ├── dataset├── fruits├── train > (train images and JSON annotation file.)
 │                    ├── val > (test images and JSON annotation file.)
 │         			 ├── annotations-csv (Annoations in CSV format)
-├── mask_rcnn_pretrained_weights (the weights can also be downloaded [here](https://github.com/matterport/Mask_RCNN/releases))
-├── mrcnn├── __init__.py
-│        ├── config.py   
-│        ├── model.py
-│        ├── parallel_model.py
-│        ├── utils.py
-│        ├── visualize.py
-├── setup.py
-├── README.md
-├── requirements.txt
-├── via.html
-└── .gitignore
+├── mask_rcnn_pretrained_weights > mask_rcnn_coco.h5
+│           
+└── trained_model > mask_rcnn_fruit_0477.h5
 ```
 
-## Setup
-- Python virtual environment - Link this to my Medium article.
-- Upgrade pip and setup tools
-- Requirements on requirement.txt
-- Link to the dataset and anotations
+## Sample images in the dataset
+Here are some samples of the images used in this project
+[images] 
+<table style="width:100%">
+  <tr>
+    <th><img src="assets/datasets/fruits/train/20130320T004547.804094.Cam6_12.png" width=400></th>
+    <th><img src="assets/datasets/fruits/train/20130320T004620.376266.Cam6_41.png" width=400></th>
+  </tr>
+  <tr>
+    <th><img src="assets/datasets/fruits/train/_MG_8080_08.jpg" width=400></th>
+    <th><img src="assets/datasets/fruits/val/20151124T044642.641468_i2238j1002.png" width=400></th>
+  </tr>
+</table>
 
 ## Directory Structure
 Repository: Mask-R-CNN-for-Fruit-Detection
@@ -77,9 +76,12 @@ Root:
 - `via.html` - This is fully-fledged VGG annotator. The online version of the annotator can be accessed here.
 [here.](http://www.robots.ox.ac.uk/~vgg/software/via/via.html)
 
-## Sample images in the dataset
-Here are some samples of the images used in this project
-[images] 
+## Setup
+- Python virtual environment - Link this to my Medium article.
+- Upgrade pip and setup tools
+- Requirements on requirement.txt
+- Link to the dataset and anotations
+
 ## Training progress plot
 
 ## Sample Mask RCNN results
