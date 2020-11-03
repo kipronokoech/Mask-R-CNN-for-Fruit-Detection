@@ -4,6 +4,28 @@ The dataset used in this project were collected from 3 sources namely:
 - Aerobotics dataset - The images are sourced by flying the drone ∼ 2m above the tree canopy which generates 2.7k video imagery. These short videos are then segmented to generate images. 
 - FUJI dataset [link](https://zenodo.org/record/3715991)
 - ACFR dataset [link](http://data.acfr.usyd.edu.au/ag/treecrops/2016-multifruit/)
+
+The total number of images collected from these three sources are 2853 - 2081 images used for training the model and 772 for testing. All the images (both train and test set) were annotated using VGG. The entire dataset with the annotations can be downloaded [here](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing). The contents of the link has the following structure:
+```bash
+Root: Mask-RCNN-for-Fruit_Detection
+├── Python
+├── dataset├── fruits├── train > (train images and JSON annotation file.)
+│                    ├── val > (test images and JSON annotation file.)
+│         			 ├── annotations-csv (Annoations in CSV format)
+├── mask_rcnn_pretrained_weights (the weights can also be downloaded [here](https://github.com/matterport/Mask_RCNN/releases))
+├── mrcnn├── __init__.py
+│        ├── config.py   
+│        ├── model.py
+│        ├── parallel_model.py
+│        ├── utils.py
+│        ├── visualize.py
+├── setup.py
+├── README.md
+├── requirements.txt
+├── via.html
+└── .gitignore
+```
+
 ## Setup
 - Python virtual environment - Link this to my Medium article.
 - Upgrade pip and setup tools
