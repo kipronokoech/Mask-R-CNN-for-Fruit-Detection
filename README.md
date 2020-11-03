@@ -2,10 +2,10 @@
 ## Dataset
 The dataset used in this project were collected from 3 sources namely:
 - Aerobotics dataset - The images are sourced by flying the drone ∼ 2m above the tree canopy which generates 2.7k video imagery. These short videos are then segmented to generate images. 
-- FUJI dataset [link](https://zenodo.org/record/3715991).
-- ACFR dataset [link](http://data.acfr.usyd.edu.au/ag/treecrops/2016-multifruit/).
+- FUJI dataset [[link]](https://zenodo.org/record/3715991).
+- ACFR dataset [[link]](http://data.acfr.usyd.edu.au/ag/treecrops/2016-multifruit/).
 
-A total of 2853 images were collected from above three sources - 2081 images used for training the model and 772 for testing. All the images (both train and test set) were manually annotated using VGG annotator[[link]](http://www.robots.ox.ac.uk/~vgg/software/via/via.html). The entire dataset with the annotations can be downloaded [here](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing). The contents of the link has the following structure:
+A total of 2853 images were collected from above three sources - 2081 images used for training the model and 772 for testing. All the images (both train and test set) were manually annotated using VGG annotator [[link]](http://www.robots.ox.ac.uk/~vgg/software/via/via.html). The entire dataset with the annotations can be downloaded [here](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing). The contents of the link has the following structure:
 ```bash
 Root: Mask-RCNN-for-Fruit_Detection
 ├── Python
@@ -55,14 +55,14 @@ Root:
 ```
 
 ## Detailed description of repository content
-- `Python` - This folder contains `fruits.ipynb` notebook. Mask R-CNN model is trained and tested in this notebook.
+- [Python](Python) - This folder contains `fruits.ipynb` notebook. Mask R-CNN model is trained and tested in this notebook.
 - [assets](assets) - This folder contains 3 sub-directories datasets, history, and logs:
-	- [datasets/fruits/train]() - this folder consist of training images and corresponding JSON annotations file.
-	- datasets/fruits/val - contains testing images and the JSON file with the annotations.
-	- history - this directory holds (will hold) the training statistics - accuracy and losses.
-	- logs - trained model is saved here. For any particular model training instance a subdirectory will be created and model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the reposity contains  fruit20200802T0017 for the model training that was initiated on Aug,2 2020 at 0017. 
-- `evaluation` - Trained model is evaluated using files in this directory. The folder contains the following dirs, subdirs and files:
-	- `metrics.pdf` - This PDF files discusses the following: The original source of data (3 sources), the metrics used to evaluate the model and the perfomance of Mask R-CNN on fruit detection task based on those metrics.
+	- [datasets/fruits/train](assets/datasets/fruits/train) - this folder consist of training images and corresponding JSON annotations file.
+	- [datasets/fruits/val](assets/datasets/fruits/val) - contains testing images and the JSON file with the annotations.
+	- [history](assets/history) - this directory holds (will hold) the training statistics - accuracy and losses.
+	- [logs](assets/logs) - trained model is saved here. For any particular model training instance a subdirectory will be created and model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the reposity contains  [fruit20200802T0017](assets/logs/fruit20200802T0017) for the model training that was initiated on Aug,2 2020 at 0017. 
+- [evaluation](evaluation) - Trained model is evaluated using files in this directory. The folder contains the following dirs, subdirs and files:
+	- [metrics.pdf](metrics.pdf) - This PDF files discusses the following: The original source of data (3 sources), the metrics used to evaluate the model and the perfomance of Mask R-CNN on fruit detection task based on those metrics.
 	- `results` - contains all the results for the metric used to evaluate the model - Confusion Matrix, Precision , Recall, Average precision and Precision x Recall curve.
 	- `generate_truth_masks.py` - This script is used to generate the annotations/labels for each image. This is important for the purposes of per-image evaluation.
 	(Ideally, this should be the first script to be executed in the process of evaluation). Executing this script creates `truth_masks` folder which contain per-image ground-truth masks for both train and test set. 
