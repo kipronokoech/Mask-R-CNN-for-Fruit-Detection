@@ -55,11 +55,11 @@ Root:
 ```
 
 ## Detailed description of repository content
-- [Python](Python) - This folder contains `fruits.ipynb` notebook. Mask R-CNN model is trained and tested in this notebook.
+- [Python](Python) - This folder contains [fruits.ipynb](Python/fruits.ipynb) notebook. Mask R-CNN model is trained and tested in this notebook.
 - [assets](assets) - This folder contains 3 sub-directories datasets, history, and logs:
 	- [datasets/fruits/train](assets/datasets/fruits/train) - this folder consist of training images and corresponding JSON annotations file.
 	- [datasets/fruits/val](assets/datasets/fruits/val) - contains testing images and the JSON file with the annotations.
-	- [history](assets/history) - this directory holds (will hold) the training statistics - accuracy and losses.
+	- [history](assets/history) - this directory holds (will hold) the training statistics - accuracy and losses. This statistics can also be logged in Tensorbord [[link]](https://www.tensorflow.org/tensorboard).
 	- [logs](assets/logs) - trained model is saved here. For any particular model training instance a subdirectory will be created and model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the reposity contains  [fruit20200802T0017](assets/logs/fruit20200802T0017) for the model training that was initiated on Aug,2 2020 at 0017. 
 - [evaluation](evaluation) - Trained model is evaluated using files in this directory. The folder contains the following dirs, subdirs and files:
 	- [metrics.pdf](evaluation/metrics.pdf) - This PDF files discusses the following: The original source of data (3 sources), the metrics used to evaluate the model and the perfomance of Mask R-CNN on fruit detection task based on those metrics.
@@ -67,7 +67,6 @@ Root:
 	- [generate_truth_masks.py](evaluation/generate_truth-masks.py) - This script is used to generate the annotations/labels for each image. This is important for the purposes of per-image evaluation.
 	(Ideally, this should be the first script to be executed in the process of evaluation). Executing this script creates `truth_masks` folder which contain per-image ground-truth masks for both train and test set. 
 	- [Evaluation.py](evaluation/Evaluation.py) contains a class that defines all the metrics used in the project: Confusion matrix, AP, Precision and Recall.
-
 	- [MaskReconstruction.py](evaluation/MaskReconstruction.py) - This script contains all functions related to manipulation of model output from contour reconstruction to drawing and writing contors.
 	- [runMain.py](evaluation/runMain.py) - Running this script calls MaskRCNN_Evaluation class in Evaluation.py. The script is mainly used to generate and save the results (important).
 - [mrcnn](mrcnn) - this folder contains all the core files needed to train Mask R-CNN. The model itself is defined in [model.py](mrcnn/model.py). Other files in the folder includes [config.py](mrcnn/config.py) (contains Configuration class for Mask R-CNN), [parallel_model.py](mrcnn/parallel_model.py) (to set up parallel processing), [utils.py](mrcnn/utils.py) (contains common utility functions and classes), [visualize.py](mrcnn/visualize.py) (facilitate visualization of model output).
@@ -89,7 +88,7 @@ python3 -m pip install --upgrade pip
 pip3 install -r requirements.txt
 ```
 - Download the datasets and Mask R-CNN pre-trained weights [[link]](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing) into corresponding folders. The pretrained weights can be donwloaded [here](https://github.com/matterport/Mask_RCNN/releases) as well. The weights should be saved in [assets](assets) folder
-- (Optional) The trained model (trained_model/mask_rcnn_fruit_0477.h5) used to generate the results is part of the content of the above link. If are interested in reproducing the results without training the model place this file should be placed in the [logs](assets/logs) folder. 
+- (Optional) The trained model (trained_model/mask_rcnn_fruit_0477.h5) used to generate the results is part of the content of the above link. If you are interested in reproducing the results without training the model place this file should be placed in the [logs](assets/logs) folder. 
 
 
 
