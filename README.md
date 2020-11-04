@@ -132,9 +132,9 @@ The following plots shows training losses for 150 epochs:
 </table>
 
 ## Evaluation
-Detailed description of perfomance metrics used in this projects can be found in [metrics.pdf](evaluation/metrics.pdf).
+Detailed description of perfomance metrics used in this projects can be found in [metrics.pdf](evaluation/metrics.pdf). Here are some articles you may find helpful [[link1]](https://towardsdatascience.com/on-object-detection-metrics-with-worked-example-216f173ed31e), [[link2]](https://towardsdatascience.com/confusion-matrix-and-object-detection-f0cbcb634157).
 
-| Threshold  |  Set | TP(%)  | FP(%)| FN(%)|
+| Threshold&nbsp;&nbsp;  |  Set | TP(%)  | FP(%)| FN(%)|
 |---|---|---|---|---|
 | 0.2  |  Train | 91.48  | 8.51 |7.82|
 |      |  Test  |  88.25 | 11.75|15.40|
