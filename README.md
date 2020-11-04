@@ -93,10 +93,18 @@ pip3 install -r requirements.txt
 
 
 ## Training progress plot
+The following plots shows training losses for 150 epochs:
+<table width="100%">
+	<tr>
+		<th><img src="example-output/mask_rcnn_class_loss.png" width=400></th>
+		<th><img src="example-output/mask_rcnn_loss.png" width=400></th>
+		<th><img src="example-output/mask_rcnn_mass_loss.png" width=400></th>
+	</tr>
+</table>
+
+
 
 ## Sample Mask RCNN results
-
-## Evaluation
 - Column 1 : RGB Image from the test set
 - Column 2 : Truth Masks
 - COlumn 3 : Mask R-CNN Output (Confidence, bounding box and segmentation mask)
@@ -122,7 +130,9 @@ pip3 install -r requirements.txt
 		<th><img src="example-output/2_predmask.png" width=400></th>
 	</tr>
 </table>
- - Sample of Mask RCNN with segmentation masks extracted
+
+## Evaluation
+
  - Brief description of the metrics: precision, recall, F1, AP, and PR curve
  - Tabulate the perfomance of the model and plot the curves where applicable.
  - Link to the paper work containing the details about the results. Include the paper on the repo.
