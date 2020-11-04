@@ -148,7 +148,7 @@ Detailed description of perfomance metrics used in this projects can be found in
 | 0.5  | Train  |  90.61 |9.39 |8.70 |
 |    | Test |85.65 |14.35 | 18.01 |
 |---|---|---|---|---|
-<div display="flex">
+
 <table width ="100%">
 	<tr>
 		<th>Theshold</th>
@@ -158,8 +158,15 @@ Detailed description of perfomance metrics used in this projects can be found in
 		<th>FN(%)</th>
 	</tr>
 </table>
-</div>
-
+<table width ="100%">
+	<tr>
+		<th>Theshold</th>
+		<th>Set</th>
+		<th>TP(%)</th>
+		<th>FP(%)</th>
+		<th>FN(%)</th>
+	</tr>
+</table>
  - Brief description of the metrics: precision, recall, F1, AP, and PR curve
  - Tabulate the perfomance of the model and plot the curves where applicable.
  - Link to the paper work containing the details about the results. Include the paper on the repo.
