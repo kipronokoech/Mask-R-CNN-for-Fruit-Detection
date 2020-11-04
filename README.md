@@ -5,13 +5,13 @@ The dataset used in this project were collected from 3 sources namely:
 - FUJI dataset [[link]](https://zenodo.org/record/3715991).
 - ACFR dataset [[link]](http://data.acfr.usyd.edu.au/ag/treecrops/2016-multifruit/).
 
-A total of 2853 images were collected from above three sources - 2081 images used for training the model and 772 for testing. All the images (both train and test set) were manually annotated using VGG annotator [[link]](http://www.robots.ox.ac.uk/~vgg/software/via/via.html). The entire dataset with the annotations can be downloaded [here](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing). The contents of the link has the following structure:
+A total of 2853 images were collected from the above three sources - 2081 images used for training the model and 772 for testing. All the images (both train and test set) were manually annotated using VGG annotator [[link]](http://www.robots.ox.ac.uk/~vgg/software/via/via.html). The entire dataset with the annotations can be downloaded [here](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing). The contents of the link have the following structure:
 ```bash
 Root: Mask-RCNN-for-Fruit_Detection
 ├── Python
 ├── dataset├── fruits├── train > (train images and JSON annotation file.)
 │                    ├── val > (test images and JSON annotation file.)
-│         			 ├── annotations-csv (Annoations in CSV format)
+│         			 ├── annotations-csv (Annotations in CSV format)
 ├── mask_rcnn_pretrained_weights > mask_rcnn_coco.h5
 │           
 └── trained_model > mask_rcnn_fruit_0477.h5
@@ -59,20 +59,20 @@ Root:
 - [assets](assets) - This folder contains 3 sub-directories datasets, history, and logs:
 	- [datasets/fruits/train](assets/datasets/fruits/train) - this folder consist of training images and corresponding JSON annotations file. Read more about JSON [here](https://medium.com/analytics-vidhya/python-dictionary-and-json-a-comprehensive-guide-ceed58a3e2ed).
 	- [datasets/fruits/val](assets/datasets/fruits/val) - contains testing images and the JSON file with the annotations. 
-	- [history](assets/history) - this directory holds (will hold) the training statistics - accuracy and losses. This statistics can also be logged in Tensorbord [[link]](https://www.tensorflow.org/tensorboard) during model training.
-	- [logs](assets/logs) - trained model is saved here. For any particular model training instance a subdirectory will be created and model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the reposity contains  [fruit20200802T0017](assets/logs/fruit20200802T0017) for the model training that was initiated on Aug,2 2020 at 0017. 
-- [evaluation](evaluation) - Trained model is evaluated using files in this directory. The folder contains the following dirs, subdirs and files:
-	- [metrics.pdf](evaluation/metrics.pdf) - This PDF files discusses the following: The original source of data (3 sources), the metrics used to evaluate the model and the perfomance of Mask R-CNN on fruit detection task based on those metrics.
-	- [results](evaluation/results) - contains all the results for the metric used to evaluate the model - Confusion Matrix, Precision , Recall, Average precision and Precision x Recall curve.
-	- [generate_truth_masks.py](evaluation/generate_truth-masks.py) - This script is used to generate the annotations/labels for each image. This is important for the purposes of per-image evaluation.
-	(Ideally, this should be the first script to be executed in the process of evaluation). Executing this script creates `truth_masks` folder which contain per-image ground-truth masks for both train and test set. 
-	- [Evaluation.py](evaluation/Evaluation.py) contains a class that defines all the metrics used in the project: Confusion matrix, AP, Precision and Recall.
-	- [MaskReconstruction.py](evaluation/MaskReconstruction.py) - This script contains all functions related to manipulation of model output from contour reconstruction to drawing and writing contors.
+	- [history](assets/history) - this directory holds (will hold) the training statistics - accuracy and losses. These statistics can also be logged in Tensorbord [[link]](https://www.tensorflow.org/tensorboard) during model training.
+	- [logs](assets/logs) - trained model is saved here. For any particular model training instance, a subdirectory will be created and the model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the repository contains  [fruit20200802T0017](assets/logs/fruit20200802T0017) for the model training that was initiated on Aug,2 2020 at 0017. 
+- [evaluation](evaluation) - Trained model is evaluated using files in this directory. The folder contains the following directories, subdirectories, and files:
+	- [metrics.pdf](evaluation/metrics.pdf) - This PDF file discusses the following: The Sourcing of data, the metrics used to evaluate the model, and the performance of Mask R-CNN on fruit detection task based on those metrics.
+	- [results](evaluation/results) - contains all the results for the metric used to evaluate the model - Confusion Matrix, Precision, Recall, Average precision, and Precision x Recall curve.
+	- [generate_truth_masks.py](evaluation/generate_truth-masks.py) - This script is used to generate the annotations/labels for each image. This is important for per-image evaluation.
+	(Ideally, this should be the first script to be executed in the process of evaluation). Executing this script creates `truth_masks` folder which contains per-image ground-truth masks for both train and test set. 
+	- [Evaluation.py](evaluation/Evaluation.py) contains a class that defines all the metrics used in the project: Confusion matrix, AP, Precision, and Recall.
+	- [MaskReconstruction.py](evaluation/MaskReconstruction.py) - This script contains all functions related to manipulation of model output from contour reconstruction to drawing and writing contours.
 	- [runMain.py](evaluation/runMain.py) - Running this script calls MaskRCNN_Evaluation class in Evaluation.py. The script is mainly used to generate and save the results (important).
 - [mrcnn](mrcnn) - this folder contains all the core files needed to train Mask R-CNN. The model itself is defined in [model.py](mrcnn/model.py). Other files in the folder includes [config.py](mrcnn/config.py) (contains Configuration class for Mask R-CNN), [parallel_model.py](mrcnn/parallel_model.py) (to set up parallel processing), [utils.py](mrcnn/utils.py) (contains common utility functions and classes), [visualize.py](mrcnn/visualize.py) (facilitate visualization of model output).
-- example-output - Used for output visualization. The content of folder is used to display the results in this README.md file and nothing else - Not used in training or evaluating the model.
-- [requirements.txt](requirements.txt) - contains all the libraries and packages required run the model. Specific versions of libraries are defined to ease reproducibility.
-- [setup.py](setup.py) - This file is executed as a part of setup process. The process installs the necessary dependencies that are missing. Once you have gone through `Setup` section executing this file won't be necessary.
+- example-output - Used for output visualization. The content of the folder is used to display the results in this README.md file and nothing else - Neither used in training nor model evaluation.
+- [requirements.txt](requirements.txt) - contains all the libraries and packages required to run the model. Specific versions of libraries are defined to ease reproducibility.
+- [setup.py](setup.py) - This file is executed as a part of the setup process. The process installs the necessary dependencies that are missing. Once you have gone through `Setup` section executing this file won't be necessary.
 - [via.html](via.html) - This is fully-fledged VGG annotator. The online version of the annotator can be accessed
 [here.](http://www.robots.ox.ac.uk/~vgg/software/via/via.html)
 
@@ -88,7 +88,7 @@ python3 -m pip install --upgrade pip
 ```bash
 pip3 install -r requirements.txt
 ```
-- Download the datasets and Mask R-CNN pre-trained weights [[link]](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing) into corresponding folders. The pretrained weights can be donwloaded [here](https://github.com/matterport/Mask_RCNN/releases) as well. The weights should be saved in [assets](assets) folder
+- Download the datasets and Mask R-CNN pre-trained weights [[link]](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing) into corresponding folders. The pre-trained weights can be downloaded [here](https://github.com/matterport/Mask_RCNN/releases) as well. The weights should be saved in [assets](assets) folder
 - [Optional] The trained model (trained_model/mask_rcnn_fruit_0477.h5) used to generate the results is part of the content of the above link. If you are interested in reproducing the results without training the model place this file should be placed in the [logs](assets/logs) folder. 
 
 
@@ -105,10 +105,10 @@ The following plots shows training losses for 150 epochs:
 
 
 ## Sample Mask RCNN results
-- Column 1 : RGB Image from the test set
-- Column 2 : Truth Masks
-- COlumn 3 : Mask R-CNN Output (Confidence, bounding box and segmentation mask)
-- Column 4 : Segmentation Mask
+- Column 1: RGB Image from the test set
+- Column 2: Truth Masks
+- COlumn 3: Mask R-CNN Output (Confidence, bounding box, and segmentation mask)
+- Column 4: Segmentation Mask
 
 <table width="100%">
 	<tr>
@@ -132,7 +132,7 @@ The following plots shows training losses for 150 epochs:
 </table>
 
 ## Evaluation
-Detailed description of perfomance metrics used in this projects can be found in [metrics.pdf](evaluation/metrics.pdf). Here are some articles you may find helpful as well [[link1]](https://towardsdatascience.com/on-object-detection-metrics-with-worked-example-216f173ed31e), [[link2]](https://towardsdatascience.com/confusion-matrix-and-object-detection-f0cbcb634157).
+A detailed description of the performance metrics used in this project can be found in [metrics.pdf](evaluation/metrics.pdf). Here are some articles you may find helpful as well [[link1]](https://towardsdatascience.com/on-object-detection-metrics-with-worked-example-216f173ed31e), [[link2]](https://towardsdatascience.com/confusion-matrix-and-object-detection-f0cbcb634157).
 ### Confusion Matrix
 | IoU Threshold  |  Set | True Positive(%)  | False Positive(%)| False Negative(%)|
 |---|---|---|---|---|
