@@ -111,7 +111,7 @@ pip3 install -r requirements.txt
 		<th><img src="example-output/1_predmask.png" width=400></th>
 	</tr>
 	<tr>
-		<th><img src="example-output/3.png" width=400></th>
+		<th><img src="example-output/3.png" height=400 width=400></th>
 		<th><img src="example-output/3_truthmask.png" width=400></th>
 		<th><img src="example-output/3_mask.png" width=400></th>
 		<th><img src="example-output/3_predmask.png" width=400></th>
