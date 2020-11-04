@@ -57,8 +57,8 @@ Root:
 ## Detailed description of repository content
 - [Python](Python) - This folder contains [fruits.ipynb](Python/fruits.ipynb) notebook. Mask R-CNN model is trained and tested in this notebook.
 - [assets](assets) - This folder contains 3 sub-directories datasets, history, and logs:
-	- [datasets/fruits/train](assets/datasets/fruits/train) - this folder consist of training images and corresponding JSON annotations file.
-	- [datasets/fruits/val](assets/datasets/fruits/val) - contains testing images and the JSON file with the annotations.
+	- [datasets/fruits/train](assets/datasets/fruits/train) - this folder consist of training images and corresponding JSON annotations file. Read more about JSON [here](https://medium.com/analytics-vidhya/python-dictionary-and-json-a-comprehensive-guide-ceed58a3e2ed).
+	- [datasets/fruits/val](assets/datasets/fruits/val) - contains testing images and the JSON file with the annotations. 
 	- [history](assets/history) - this directory holds (will hold) the training statistics - accuracy and losses. This statistics can also be logged in Tensorbord [[link]](https://www.tensorflow.org/tensorboard) during model training.
 	- [logs](assets/logs) - trained model is saved here. For any particular model training instance a subdirectory will be created and model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the reposity contains  [fruit20200802T0017](assets/logs/fruit20200802T0017) for the model training that was initiated on Aug,2 2020 at 0017. 
 - [evaluation](evaluation) - Trained model is evaluated using files in this directory. The folder contains the following dirs, subdirs and files:
@@ -149,24 +149,11 @@ Detailed description of perfomance metrics used in this projects can be found in
 |    | Test |85.65 |14.35 | 18.01 |
 |---|---|---|---|---|
 
-<table width ="100%">
+Precision x Recall curves
+
+<table width="100%">
 	<tr>
-		<th>Theshold</th>
-		<th>Set</th>
-		<th>TP(%)</th>
-		<th>FP(%)</th>
-		<th>FN(%)</th>
+		<th><img src="example-output/PRCurve_forDifferentThresholds_train.png"></th>
+		<th><img src="example-output/PRCurve_forDifferentThresholds_test.png"></th>
 	</tr>
 </table>
-<table width ="100%">
-	<tr>
-		<th>Theshold</th>
-		<th>Set</th>
-		<th>TP(%)</th>
-		<th>FP(%)</th>
-		<th>FN(%)</th>
-	</tr>
-</table>
- - Brief description of the metrics: precision, recall, F1, AP, and PR curve
- - Tabulate the perfomance of the model and plot the curves where applicable.
- - Link to the paper work containing the details about the results. Include the paper on the repo.
