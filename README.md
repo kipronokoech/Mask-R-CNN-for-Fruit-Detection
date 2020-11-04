@@ -97,21 +97,12 @@ pip3 install -r requirements.txt
 ## Sample Mask RCNN results
 
 ## Evaluation
+- Column 1 : RGB Image from the test set
+- Column 2 : Truth Masks
+- COlumn 3 : Mask R-CNN Output (Confidence, bounding box and segmentation mask)
+- Column 4 : Segmentation Mask
+
 <table width="100%">
-	<tr>
-		<th>RGB Image</th>
-		<th>Truth Masks</th>
-		<th>Mask R-CNN Output (Confidence, bounding box and segmentation mask)</th>
-		<th>Segmentation Mask</th>
-	</tr>
-</table>
-<table width="100%">
-	<tr>
-		<th>RGB Image</th>
-		<th>Truth Masks</th>
-		<th>Mask R-CNN Output (Confidence, bounding box and segmentation mask)</th>
-		<th>Segmentation Mask</th>
-	</tr>
 	<tr>
 		<th><img src="example-output/1.jpg" width=400></th>
 		<th><img src="example-output/1_truthmask.png" width=400 height="100%"></th>
