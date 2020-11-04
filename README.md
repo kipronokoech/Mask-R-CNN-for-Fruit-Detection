@@ -139,9 +139,8 @@ Detailed description of perfomance metrics used in this projects can be found in
 | 0.2  |  Train | 91.48  | 8.51 |7.82|
 |      |  Test  |  88.25 | 11.75|15.40|
 
-| Naive Bayes  | 0.784  |  0.924 |
-| Logistic Regression   | 0.877  | 0.953  |
-| Random Forest   |  0.736 | 0.935  |
+| Naive Bayes  | 0.784  |  0.924 |0.924 |0.924 |
+| Logistic Regression   | 0.877  |0.924 |0.924 | 0.953  |
 
  - Brief description of the metrics: precision, recall, F1, AP, and PR curve
  - Tabulate the perfomance of the model and plot the curves where applicable.
