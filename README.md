@@ -132,8 +132,8 @@ The following plots shows training losses for 150 epochs:
 </table>
 
 ## Evaluation
-Detailed description of perfomance metrics used in this projects can be found in [metrics.pdf](evaluation/metrics.pdf). Here are some articles you may find helpful [[link1]](https://towardsdatascience.com/on-object-detection-metrics-with-worked-example-216f173ed31e), [[link2]](https://towardsdatascience.com/confusion-matrix-and-object-detection-f0cbcb634157).
-
+Detailed description of perfomance metrics used in this projects can be found in [metrics.pdf](evaluation/metrics.pdf). Here are some articles you may find helpful as well [[link1]](https://towardsdatascience.com/on-object-detection-metrics-with-worked-example-216f173ed31e), [[link2]](https://towardsdatascience.com/confusion-matrix-and-object-detection-f0cbcb634157).
+### Confusion Matrix
 | IoU Threshold  |  Set | True Positive(%)  | False Positive(%)| False Negative(%)|
 |---|---|---|---|---|
 | 0.2  |  Train | 91.48  | 8.51 |7.82|
@@ -149,7 +149,13 @@ Detailed description of perfomance metrics used in this projects can be found in
 |    | Test |85.65 |14.35 | 18.01 |
 |---|---|---|---|---|
 
-Precision x Recall curves
+### Average Precision at different thresholds
+| Set  |  AP@20 | AP@30 | AP@40| AP@50|
+|---|---|---|---|---|
+| Train  |  0.9625 | 0.9514| 0.9457 |0.9344|
+| Test   |  0.8997  | 0.8854 | 0.8732|0.8470|
+
+### Precision x Recall curves
 
 <table width="100%">
 	<tr>
@@ -157,3 +163,4 @@ Precision x Recall curves
 		<th><img src="example-output/PRCurve_forDifferentThresholds_test.png"></th>
 	</tr>
 </table>
+
