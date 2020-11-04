@@ -98,12 +98,12 @@ pip3 install -r requirements.txt
 
 ## Evaluation
 <table width="100%">
-	<td>
+	<tr>
 		<th>RGB Image</th>
 		<th>Truth Masks</th>
 		<th>Mask R-CNN Output (Confidence, bounding box and segmentation mask)</th>
 		<th>Segmentation Mask</th>
-	</td>
+	</tr>
 	<tr>
 		<th><img src="example-output/1.jpg" width=400></th>
 		<th><img src="example-output/1_truthmask.png" width=400></th>
