@@ -149,7 +149,15 @@ Detailed description of perfomance metrics used in this projects can be found in
 |    | Test |85.65 |14.35 | 18.01 |
 |---|---|---|---|---|
 
-
+<table width ="100%">
+	<tr>
+		<th>Theshold</th>
+		<th>Set</th>
+		<th>TP(%)</th>
+		<th>FP(%)</th>
+		<th>FN(%)</th>
+	</tr>
+</table>
 
  - Brief description of the metrics: precision, recall, F1, AP, and PR curve
  - Tabulate the perfomance of the model and plot the curves where applicable.
