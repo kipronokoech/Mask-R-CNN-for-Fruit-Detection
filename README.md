@@ -2,8 +2,8 @@
 ## Dataset
 The dataset used in this project were collected from 3 sources namely:
 - Aerobotics dataset - The images are sourced by flying the drone ∼ 2m above the tree canopy which generates 2.7k video imagery. These short videos are then segmented to generate images. 
-- FUJI dataset [[link]](https://zenodo.org/record/3715991).
-- ACFR dataset [[link]](http://data.acfr.usyd.edu.au/ag/treecrops/2016-multifruit/).
+- FUJI dataset.
+- ACFR dataset.
 
 A total of 2853 images were collected from the above three sources - 2081 images used for training the model and 772 for testing. All the images (both train and test set) were manually annotated using VGG annotator [[link]](http://www.robots.ox.ac.uk/~vgg/software/via/via.html). The entire dataset with the annotations can be downloaded [here](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing). The contents of the link have the following structure:
 ```bash
@@ -178,3 +178,7 @@ A detailed description of the performance metrics used in this project can be fo
 1. He, K., Gkioxari, G., Dollar, P., and Girshick, R. Mask R-CNN. 2017 IEEE International Conference on Computer Vision (ICCV), Oct 2017. doi: 10.1109/iccv.2017.322. URL http://dx.doi.org/10.1109/ICCV.2017.322.
 
 2. Padilla, R., Netto, S. L., and da Silva, E. A. A survey on performance metrics for object-detection algorithms. In 2020 International Conference on Systems, Signals and Image Processing (IWSSIP), pages 237–242. IEEE, 2020.
+
+3. Datasets:
+	- FUJI dataset [[link]](https://zenodo.org/record/3715991).
+	- ACFR dataset [[link]](http://data.acfr.usyd.edu.au/ag/treecrops/2016-multifruit/).
