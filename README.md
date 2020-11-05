@@ -40,13 +40,21 @@ Root:
 │         │                     ├── val > (3 sample images and annotation file.)
 │         ├── history > training-stats
 │         ├── logs > trained-models
-├── evaluation
+├── evaluation ├── results > model performance
+│              ├── truth_masks ├── test_masks_truth > truth masks for test set.
+│              │               ├── train_masks_truth > truth masks for train set.
+│              ├── Evaluation.py
+│              ├── MaskReconstruction.py
+│              ├── generate_truth-masks.py
+│              ├── metrics.pdf
+│              ├── runMain.py
 ├── mrcnn├── __init__.py
 │        ├── config.py   
 │        ├── model.py
 │        ├── parallel_model.py
 │        ├── utils.py
 │        ├── visualize.py
+├── example-output > images and plots used only within this README.md file
 ├── setup.py
 ├── README.md
 ├── requirements.txt
@@ -106,10 +114,10 @@ The following plots shows training losses for 150 epochs:
 </table>
 
 ## Sample Mask RCNN results
-- Column 1: RGB Image from the test set
-- Column 2: Truth Masks
-- COlumn 3: Mask R-CNN Output (Confidence, bounding box, and segmentation mask)
-- Column 4: Segmentation Mask
+- Column 1: RGB Image from the test set.
+- Column 2: Truth Masks.
+- Column 3: Mask R-CNN Output (Confidence, bounding box, and segmentation mask).
+- Column 4: Segmentation Mask.
 
 <table width="100%">
 	<tr>
