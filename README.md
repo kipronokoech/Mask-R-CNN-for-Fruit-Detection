@@ -173,3 +173,8 @@ A detailed description of the performance metrics used in this project can be fo
 	</tr>
 </table>
 
+### References
+
+1. He, K., Gkioxari, G., Dollar, P., and Girshick, R. Mask R-CNN. 2017 IEEE International Conference on Computer Vision (ICCV), Oct 2017. doi: 10.1109/iccv.2017.322. URL http://dx.doi.org/10.1109/ICCV.2017.322.
+
+2. Padilla, R., Netto, S. L., and da Silva, E. A. A survey on performance metrics for object-detection algorithms. In 2020 International Conference on Systems, Signals and Image Processing (IWSSIP), pages 237–242. IEEE, 2020.
