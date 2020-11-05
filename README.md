@@ -62,7 +62,7 @@ Root:
 	- [history](assets/history) - this directory holds (will hold) the training statistics - accuracy and losses. These statistics can also be logged in Tensorbord [[link]](https://www.tensorflow.org/tensorboard) during model training.
 	- [logs](assets/logs) - trained model is saved here. For any particular model training instance, a subdirectory will be created and the model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the repository contains  [fruit20200802T0017](assets/logs/fruit20200802T0017) for the model training that was initiated on Aug,2 2020 at 0017. 
 - [evaluation](evaluation) - Trained model is evaluated using files in this directory. The folder contains the following directories, subdirectories, and files:
-	- [metrics.pdf](evaluation/metrics.pdf) - This PDF file discusses the following: The Sourcing of data, the metrics used to evaluate the model, and the performance of Mask R-CNN on fruit detection task based on those metrics.
+	- [metrics.pdf](evaluation/metrics.pdf) - This PDF file discusses the following: The sourcing of data, the metrics used to evaluate the model, and the performance of Mask R-CNN on fruit detection task based on those metrics.
 	- [results](evaluation/results) - contains all the results for the metric used to evaluate the model - Confusion Matrix, Precision, Recall, Average precision, and Precision x Recall curve.
 	- [generate_truth_masks.py](evaluation/generate_truth-masks.py) - This script is used to generate the annotations/labels for each image. This is important for per-image evaluation.
 	(Ideally, this should be the first script to be executed in the process of evaluation). Executing this script creates `truth_masks` folder which contains per-image ground-truth masks for both train and test set. 
@@ -70,7 +70,7 @@ Root:
 	- [MaskReconstruction.py](evaluation/MaskReconstruction.py) - This script contains all functions related to manipulation of model output from contour reconstruction to drawing and writing contours.
 	- [runMain.py](evaluation/runMain.py) - Running this script calls MaskRCNN_Evaluation class in Evaluation.py. The script is mainly used to generate and save the results (important).
 - [mrcnn](mrcnn) - this folder contains all the core files needed to train Mask R-CNN. The model itself is defined in [model.py](mrcnn/model.py). Other files in the folder includes [config.py](mrcnn/config.py) (contains Configuration class for Mask R-CNN), [parallel_model.py](mrcnn/parallel_model.py) (to set up parallel processing), [utils.py](mrcnn/utils.py) (contains common utility functions and classes), [visualize.py](mrcnn/visualize.py) (facilitate visualization of model output).
-- example-output - Used for output visualization. The content of the folder is used to display the results in this README.md file and nothing else - Neither used in training nor model evaluation.
+- [example-output](example-output) - Used for output visualization. The content of the folder is used to display the results in this README.md file and nothing else - Neither used in training nor model evaluation.
 - [requirements.txt](requirements.txt) - contains all the libraries and packages required to run the model. Specific versions of libraries are defined to ease reproducibility.
 - [setup.py](setup.py) - This file is executed as a part of the setup process. The process installs the necessary dependencies that are missing. Once you have gone through `Setup` section executing this file won't be necessary.
 - [via.html](via.html) - This is fully-fledged VGG annotator. The online version of the annotator can be accessed
@@ -88,8 +88,11 @@ python3 -m pip install --upgrade pip
 ```bash
 pip3 install -r requirements.txt
 ```
-- Download the datasets and Mask R-CNN pre-trained weights [[link]](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing) into corresponding folders. The pre-trained weights can be downloaded [here](https://github.com/matterport/Mask_RCNN/releases) as well. The weights should be saved in [assets](assets) folder
-- [Optional] The trained model (trained_model/mask_rcnn_fruit_0477.h5) used to generate the results is part of the content of the above link. If you are interested in reproducing the results without training the model place this file should be placed in the [logs](assets/logs) folder. 
+- Download the datasets and Mask R-CNN pre-trained weights [[link]](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing) into corresponding folders. The pre-trained weights can be downloaded [here](https://github.com/matterport/Mask_RCNN/releases) as well. The weights should be saved in [assets](assets) folder.
+- [Optional] The trained model trained_model/mask_rcnn_fruit_0477.h5 used to generate the results is part of the content of the above link. If you are interested in reproducing the results without training the model place this file should be placed in the [logs](assets/logs) folder. \
+- Evaluation:
+	- Generate per-image truth masks by executing [generate_truth-masks.py](evaluation/generate_truth-masks.py).
+	- Execute [runMain.py](evaluation/runMain.py) in order to generate evaluation results. All the evaluation results will be written into [results](evaluation/results) folder.
 
 
 ## Training progress plot
@@ -101,8 +104,6 @@ The following plots shows training losses for 150 epochs:
 		<th><img src="example-output/mask_rcnn_mass_loss.png" width=400></th>
 	</tr>
 </table>
-
-
 
 ## Sample Mask RCNN results
 - Column 1: RGB Image from the test set
