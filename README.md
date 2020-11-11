@@ -97,7 +97,7 @@ python3 -m pip install --upgrade pip
 pip3 install -r requirements.txt
 ```
 - Download the datasets and Mask R-CNN pre-trained weights [[link]](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing) into corresponding folders. The pre-trained weights can be downloaded [here](https://github.com/matterport/Mask_RCNN/releases) as well. The weights should be saved in [assets](assets) folder.
-- [Optional] The trained model trained_model/mask_rcnn_fruit_0477.h5 used to generate the results is part of the content of the above link. If you are interested in reproducing the results without training the model place this file should be placed in the [logs](assets/logs) folder. \
+- [Optional] The trained model trained_model/mask_rcnn_fruit_0477.h5 used to generate the results is part of the content of the above link. If you are interested in reproducing the results without training the model place this file in the [logs](assets/logs) folder. \
 - Evaluation:
 	- Generate per-image truth masks by executing [generate_truth-masks.py](evaluation/generate_truth-masks.py).
 	- Execute [runMain.py](evaluation/runMain.py) in order to generate evaluation results. All the evaluation results will be written into [results](evaluation/results) folder.
