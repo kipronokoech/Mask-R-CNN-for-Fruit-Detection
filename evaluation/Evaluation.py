@@ -14,11 +14,12 @@ font = {'weight' : 'normal',
 rc('font', **font)
 
 class MaskRCNN_Evaluation(object):
-    def __init__(self,iou_value=0.5):
+    def __init__(self,iou_value=0.5,confidence=0.9):
         """
         iou_value= iou treshold for TP and otherwise.
         """
         self.iou_value = iou_value
+        self.confidence = confidence
 
     def ConfusionMatrix(self,truth,preds,kind="all"):
       """
@@ -116,7 +117,7 @@ class MaskRCNN_Evaluation(object):
 
       return tp, fp, fn #, len(preds), len(truth)
 
-    def WriteConfusionMatrix(self,truth_path,preds_path,set1,threshold=0.9):
+    def WriteConfusionMatrix(self,truth_path,preds_path,set1):
         """
         This function write TP,FP,FN,PRECISION, RECALL into a file
 
@@ -124,10 +125,10 @@ class MaskRCNN_Evaluation(object):
         preds_path - is a path to the prediction masks
         """
         if os.path.isfile("./evaluation/results/{}ConfusionMatrix{}.json".format(set1,self.iou_value)):
-            print("./evaluation/results/{}ConfusionMatrix{}.json already exists. Quitting.".format(set1,self.iou_value))
+            print("./evaluation/results/{}ConfusionMatrix%{}%{}.json already exists. Quitting.".format(set1,self.confidence,self.iou_value))
             return None
 
-        f= open("./evaluation/results/{}ConfusionMatrix{}.json".format(set1,self.iou_value),"w+")
+        f= open("./evaluation/results/{}ConfusionMatrix%{}%{}.json".format(set1,self.confidence,self.iou_value),"w+")
         all_detections = 0
         all_gt = 0
         total_tp = 0
@@ -135,11 +136,11 @@ class MaskRCNN_Evaluation(object):
         total_fn = 0
         all_details = [] 
         for index,truth_mask in enumerate(os.listdir(truth_path)):
-            truth = np.load(os.path.join(truth_path,truth_mask))
+            truth = np.load(os.path.join(truth_path,truth_mask), allow_pickle=True)
             pred_name = truth_mask.replace("_truth.npy", "_mask2.npy")
-            pred = np.load(os.path.join(preds_path,pred_name))
-            pred = [mask_ for mask_ in pred if mask_["confidence"] > threshold]
-            s = MaskConstruction(image=None, truth=truth,mask=pred,threshold=threshold)
+            pred = np.load(os.path.join(preds_path,pred_name),allow_pickle=True)
+            pred = [mask_ for mask_ in pred if mask_["confidence"] > self.confidence]
+            s = MaskConstruction(image=None, truth=truth,mask=pred,threshold=self.confidence)
             tp, fp, fn = self.ConfusionMatrix(truth,s.Contors(),kind="all")
             if (tp+fp) == 0:
                 continue
@@ -213,16 +214,16 @@ class MaskRCNN_Evaluation(object):
 
         """
         assert os.path.exists(annotations_path),\
-        "Annotations path is not valid. Check again."
+        "Annotations path is not valid. Details >> Does not exit."
 
         assert os.path.exists(images_path),\
-        "Images path is not valid. Check again."
+        "Images path is not valid. Details >> Does not exit."
 
         assert os.path.exists(truth_path),\
-        "Ground truth masks path is not valid. Check again."
+        "Ground truth masks path is not valid. Details >> Does not exit."
 
         assert os.path.exists(preds_path),\
-        "Path to the prediction masks provided is not valid. Check again."
+        "Path to the prediction masks provided is not valid. Details >> Does not exit."
 
         assert set1=="test" or set1=="train", \
         "set1 can only be 'test' or 'train'. You may have to rename yours sets to follow this naming style"
@@ -230,8 +231,8 @@ class MaskRCNN_Evaluation(object):
         assert break_num==-1 or break_num > 0,\
         "Choose -1 to write all annotations or any positive integer to specify the number of annotations to write"
 
-        if os.path.exists("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value)):
-            print("./evaluation/results/{}AP{}.csv already exists. Quitting.".format(set1,self.iou_value))
+        if os.path.exists("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value)):
+            print("./evaluation/results/{}AP%{}%{}.csv already exists. Quitting.".format(set1,self.confidence,self.iou_value))
             return None
 
 
@@ -245,9 +246,9 @@ class MaskRCNN_Evaluation(object):
                 filename, ext = os.path.splitext(image)
                 # Load prediction probability mask
                 pred = os.path.join(preds_path,filename+"_mask2.npy")
-                pred = np.load(pred)
+                pred = np.load(pred, allow_pickle=True)
                 truth = os.path.join(truth_path,filename+"_truth.npy")
-                truth = np.load(truth)
+                truth = np.load(truth, allow_pickle=True)
                 # Determine the number of detections per image
                 num  = len(pred)
                 for i in range(num):
@@ -284,18 +285,21 @@ class MaskRCNN_Evaluation(object):
         metadf["Recall"] = metadf["TP-CUM"]/all_gt
 
         #save the DF as csv file
-        metadf.to_csv("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value))
+        metadf.to_csv("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value))
 
         return metadf
 
 
     def PlotPrecisionRecallCurve(self,set1,display=False):
-        assert os.path.isfile("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value)),\
+        assert os.path.isfile("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value)),\
         "File containing precision and recall for this set does not exist. Please\
         run WriteAndDisplayPR() function"
-        df = pd.read_csv("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value))
+        df = pd.read_csv("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value))
         precision = df["Precision"]
         recall = df["Recall"]
+        if os.path.exists("./evaluation/results/PrecisionRecallCurve_{}AP%{}%{}.png".format(set1,self.confidence,self.iou_value)):
+            print("File already exists >>","./evaluation/results/PrecisionRecallCurve_{}AP%{}%{}.png".format(set1,self.confidence,self.iou_value))
+            return precision, recall, set1, self.iou_value
         plt.figure(figsize=(12,10))
         plt.grid(True)
         plt.plot(recall,precision,label="{}@{}".format(set1,self.iou_value),linewidth=2)
@@ -304,18 +308,18 @@ class MaskRCNN_Evaluation(object):
         plt.xlabel("Recall")
         plt.ylabel("Precision")
         plt.legend(loc="lower left")
-        plt.savefig("./evaluation/results/PrecisionRecallCurve_{}AP{}.png".format(set1,self.iou_value))
-        print("The plot has been saved as: PrecisionRecallCurve_{}".format("{}AP{}.png".format(set1,self.iou_value)))
+        plt.savefig("./evaluation/results/PrecisionRecallCurve_{}AP%{}%{}.png".format(set1,self.confidence,self.iou_value))
+        print("The plot has been saved as: PrecisionRecallCurve_{}".format("{}AP{}%{}%.png".format(set1,self.confidence,self.iou_value)))
         if display == True:
         	plt.show()
         return precision, recall, set1, self.iou_value
 
 
     def AP_NoInterpolation(self,set1):
-        assert os.path.isfile("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value)),\
+        assert os.path.isfile("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value)),\
         "File containing precision and recall for this set does not exist. Please\
         run WriteAndDisplayPR() function"
-        df = pd.read_csv("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value))
+        df = pd.read_csv("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value))
         precision = df["Precision"]
         recall = df["Recall"]
 
@@ -344,16 +348,16 @@ class MaskRCNN_Evaluation(object):
         "Interpolated Recall": mrec,
         "Misc" : ii
         }
-        with open("./evaluation/results/{}AP_valuesAP_NoInterpolation{}.json".format(set1,self.iou_value),"w+") as fp:
+        with open("./evaluation/results/{}AP_valuesAP_NoInterpolation%{}%{}.json".format(set1,self.confidence,self.iou_value),"w+") as fp:
             json.dump(r,fp,indent=3)
         return r
 
 
     def AP_11PointInterpolation(self,set1):
-        assert os.path.isfile("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value)),\
+        assert os.path.isfile("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value)),\
         "File contating precision and recall for this set does not exist. Please\
         run WriteAndDisplayPR() function"
-        df = pd.read_csv("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value))
+        df = pd.read_csv("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value))
         precision = df["Precision"]
         recall = df["Recall"]
         # def CalculateAveragePrecision2(rec, prec):
@@ -409,7 +413,7 @@ class MaskRCNN_Evaluation(object):
         "Misc": None
         }
 
-        with open("./evaluation/results/{}AP_values_11_PointInterpolation{}.json".format(set1,self.iou_value),"w+") as fp:
+        with open("./evaluation/results/{}AP_values_11_PointInterpolation%{}%{}.json".format(set1,self.confidence,self.iou_value),"w+") as fp:
             json.dump(r,fp,indent=3)
 
         return r

@@ -17,7 +17,8 @@ matplotlib.rc('font', **font)
 # Change the working dir into the root
 os.chdir("../")
 
-iou_threshold = 0.5
+iou_threshold = 0.2
+confidence = 0.95
 # Path to the images - both train and test set
 # there are two sub folders here - train and val
 images ="assets/datasets/fruits"
@@ -45,7 +46,7 @@ train_masks_pred  = "./output/train_masks_pred"
 test_masks_pred = "./output/test_masks_pred"
 
 
-# example - just puicking one image for testing.
+# example - just puicking one image for testing the code.
 example_image = os.path.join(images_path_test,image_name)
 example_truth = os.path.join(test_masks_truth,"{}_truth.npy".format(filename))
 example_pred = os.path.join(test_masks_pred,"{}_mask2.npy".format(filename))
@@ -53,21 +54,33 @@ example_pred = os.path.join(test_masks_pred,"{}_mask2.npy".format(filename))
 # Call MaskConstruction class 
 # This class contains all functions used to reconstruct and draw masks
 # Parameters: image, ground-truth masks,prediction masks and confidence
-s = MaskConstruction(example_image,example_truth,example_pred,0.9)
+
+#--------------------------------------------------------------------------
+# example_image = "/home/kiprono/Desktop/_MG_7954_03.jpg"
+# example_pred = "/home/kiprono/Desktop/_MG_7954_03_mask2.npy"
+# example_truth = "/home/kiprono/Desktop/_MG_7954_03_truth.npy"
+
+#--------------------------------------------------------------------------
+s = MaskConstruction(example_image,example_truth,example_pred,confidence)
 
 # Draw prediction masks
 # if you want to view the output pass a parameter display = True
 # it is false by default
-s.draw_contours()
+img_contors = s.draw_contours(display=False)
+
+# plt.imshow(img_contors)
+# plt.savefig("/home/kiprono/Desktop/img_contors%90.png")
 
 # Call MaskEvaluation class
 # This class contains all the function used to evaluate Mask-RCNN
 # Parameter: IoU threshold
-ss= MaskRCNN_Evaluation(iou_threshold)
+ss= MaskRCNN_Evaluation(iou_threshold,confidence)
 
 # Draw ground-truth masks
 # passs a parameter display = True to view the output. False by default
-s.draw_truth_masks()
+img_truth = s.draw_truth_masks(display=False)
+# plt.imshow(img_truth)
+# plt.savefig("/home/kiprono/Desktop/img_truth_contors.png")
 
 # Write precision and recall into a CSV file
 ss.WriteAndDisplayPR(train_annotations,train_masks_pred,train_masks_truth,images_path_train,set1="train",break_num=-1)
@@ -88,15 +101,15 @@ ss.WriteConfusionMatrix(train_masks_truth,train_masks_pred,set1="train")
 # Plot PR curve, pass display = True parameter to display the plot. False by default
 # the function also returns precision, recall, set1(train or test) and IoU at 
 # different level of confidence.
-precision, recall,set1, iou = ss.PlotPrecisionRecallCurve(set1="train")
-
+precision, recall,set1, iou = ss.PlotPrecisionRecallCurve(set1="train",display=False)
+precision, recall,set1, iou = ss.PlotPrecisionRecallCurve(set1="test",display=False)
 
 
 
 
 ###################### END ###############################
 
-# Everything written below is meant for testing purposes - not essentials
+# Everything written below is meant for testing ideas - not essentials
 
 
 

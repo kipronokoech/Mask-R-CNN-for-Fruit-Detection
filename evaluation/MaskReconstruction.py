@@ -7,7 +7,7 @@ import random
 import ntpath
 
 class MaskConstruction(object):
-	def __init__(self,image,truth=None,mask=None,threshold = 0.9):
+	def __init__(self,image,truth = None,mask = None,threshold = 0.9):
 		self.image = image
 		self.truth = truth
 		self.mask = mask

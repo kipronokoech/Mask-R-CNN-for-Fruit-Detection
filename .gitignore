@@ -15,7 +15,6 @@ example
 Plot_PR_and_test_masks.py
 test.py
 __pycache__
-DataPreparation
 Annotation projects
 junk
 20130320T004849.903118.Cam6_43_mask2.npy
@@ -25,3 +24,12 @@ _MG_8993_24_mask2.npy
 20130320T004620.376266.Cam6_41_mask2.npy
 20151124T024524.796253_i1870j760_mask2.npy
 _MG_8080_08_mask2.npy
+evaluation/truth_masks/train_masks_truth/*
+evaluation/truth_masks/test_masks_truth/*
+evaluation/results/*
+assets/datasets/ACFR-Apples/*
+assets/datasets/ACFR-Mangoes/*
+assets/datasets/FUJI-Apples/*
+assets/datasets/Merged-Dataset/*
+output/test_masks_pred/*
+output/train_masks_pred/*
