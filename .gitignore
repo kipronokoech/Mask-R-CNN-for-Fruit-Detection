@@ -32,5 +32,6 @@ assets/datasets/ACFR-Apples/*
 assets/datasets/ACFR-Mangoes/*
 assets/datasets/FUJI-Apples/*
 assets/datasets/Merged-Dataset/*
-output/test_masks_pred/*
-output/train_masks_pred/*
+output/fruits2/test_masks2/*
+output/fruits2/train_masks2/*
+output/fruits2/val_masks2/*
