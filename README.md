@@ -22,12 +22,12 @@ Here are some samples of the images used in this project
 [images] 
 <table style="width:100%">
   <tr>
-    <th><img src="assets/datasets/fruits/train/20130320T004547.804094.Cam6_12.png" width=400></th>
-    <th><img src="assets/datasets/fruits/train/20130320T004620.376266.Cam6_41.png" width=400></th>
+    <th><img src="assets/datasets/fruits2/train/20130320T004547.804094.Cam6_12.png" width=400></th>
+    <th><img src="assets/datasets/fruits2/train/20130320T004849.903118.Cam6_43.png" width=400></th>
   </tr>
   <tr>
-    <th><img src="assets/datasets/fruits/train/_MG_8080_08.jpg" width=400></th>
-    <th><img src="assets/datasets/fruits/val/20151124T044642.641468_i2238j1002.png" width=400></th>
+    <th><img src="assets/datasets/fruits2/train/_MG_8080_08.jpg" width=400></th>
+    <th><img src="assets/datasets/fruits2/val/20151124T044642.641468_i2238j1002.png" width=400></th>
   </tr>
 </table>
 
