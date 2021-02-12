@@ -42,8 +42,9 @@ Repository: Mask-R-CNN-for-Fruit-Detection
 ```bash
 Root:
 ├── Python
-├── assets├── datasets├── fruits├── train > (4 sample images and annotation file.)
+├── assets├── datasets├── fruits├── train > (5 sample images and annotation file.)
 │         │                     ├── val > (3 sample images and annotation file.)
+│		  │	                    ├── test > (3 sample images and annotation file.)
 │         ├── history > training-stats
 │         ├── logs > trained-models
 ├── evaluation ├── results > model performance
