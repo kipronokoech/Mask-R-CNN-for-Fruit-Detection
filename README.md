@@ -44,7 +44,7 @@ Root:
 ├── Python
 ├── assets├── datasets├── fruits├── train > (5 sample images and annotation file.)
 │         │                     ├── val > (3 sample images and annotation file.)
-│	      │	                    ├── test > (3 sample images and annotation file.)
+│         │                     ├── test > (3 sample images and annotation file.)
 │         ├── history > training-stats
 │         ├── logs > trained-models
 ├── evaluation ├── results > model performance
