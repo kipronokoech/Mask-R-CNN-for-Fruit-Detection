@@ -27,7 +27,10 @@ _MG_8993_24_mask2.npy
 _MG_8080_08_mask2.npy
 evaluation/truth_masks/train_masks_truth/*
 evaluation/truth_masks/test_masks_truth/*
-evaluation/results/*
+evaluation/results/train*
+evaluation/results/test*
+evaluation/results/Precision*
+evaluation/results/auc/*
 assets/datasets/ACFR-Apples/*
 assets/datasets/ACFR-Mangoes/*
 assets/datasets/FUJI-Apples/*
