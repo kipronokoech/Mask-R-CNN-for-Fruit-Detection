@@ -1,7 +1,6 @@
 venv
 __pycache__
 .ipynb_checkpoints
-assets/logs/*
 DataPreparation
 datasets/fruits2/*
 evaluation/example
