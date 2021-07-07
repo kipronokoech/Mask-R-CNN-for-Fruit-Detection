@@ -1,0 +1,7 @@
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
+!20151124T044642.641468_i2238j1002.png
+!20130320T004849.903118.Cam6_43.png
+!_MG_8080_08.jpg
