@@ -14,13 +14,14 @@ font = {'weight' : 'normal',
 rc('font', **font)
 
 class MaskRCNN_Evaluation(object):
-    def __init__(self,iou_value=0.5):
+    def __init__(self,iou_value=0.5, confidence = 0.90):
         """
         iou_value= iou treshold for TP and otherwise.
         """
         self.iou_value = iou_value
+        self.confidence = confidence
 
-    def ConfusionMatrix(self,truth,preds,kind="all"):
+    def ConfusionMatrix(self,truth,preds):
       """
       ground= array of ground-truth contours.
       preds = array of predicted contours.
@@ -60,7 +61,7 @@ class MaskRCNN_Evaluation(object):
         if not above_t:
             # print("fp with allzeros",t)
             # print(len(above_t))
-            fp=fp+1
+            fp = fp+1
         elif len(above_t) >= 1:
             # print("tp with 1 above threshold",t)
             # print(len(above_t))
@@ -72,92 +73,64 @@ class MaskRCNN_Evaluation(object):
 
         #     fp = fp + (len(CheckLess(t,self.iou_value))-1)
 
-
-        
-      prob2=[]
-      #loop through each groun truth instance 
-      for i in range(len(truth)):
-          f1=truth[i]
-          f1 = shapely.geometry.Polygon(f1).buffer(0)
-          #find radius
-          f1_radius=np.sqrt((f1.area)/np.pi)
-          #buffer the polygon from the centroid
-          f1_buffered=shapely.geometry.Point(f1.centroid).buffer(f1_radius*1000)
-          cont=[]
-          # merge up the ground truth instance against prediction
-          # to determine the IoU
-          for i in range(len(preds)):
-            ff=shapely.geometry.Polygon(np.squeeze(preds[i])).buffer(0)
-            if f1_buffered.contains(ff)== True:
-              #calculate IoU
-              iou=(ff.intersection(f1).area)/(ff.union(f1).area)
-              cont.append((iou))
-          # probability of a given prediction to be contained in a
-          # ground truth instance
-          prob2.append(cont)
-      fn=0
-      for t in prob2:
-        above_th = CheckLess(t,self.iou_value)
-        # print("From truth",t)
-        if np.sum(t)==0:
-            fn=fn+1
-        elif not above_th and np.sum(t) != 0:
-            add_this = len([i for i in t if i>0])
-            fn = fn + add_this
-      
-      #Take care of many predictions overlapping the same ground truth
-      if kind == "all":
-          # if (tp+fp) != len(preds):
-          #   fp = len(preds) - tp
-          # Adjusting FN to cases where there's too little overlap and in reality
-          # It should be FN
-          if (tp+fn) != len(truth):
-            fn = len(truth) - tp
-
+      all_truths = truth.shape[0]
+      fn = all_truths - tp
+    
+      # print("len(pred) ", len(preds))
+      # print("fp+tp ", tp+fp)
+      # print("len(truth) ", len(truth))
+      # print("fn+tp ", tp+fn)
       return tp, fp, fn #, len(preds), len(truth)
 
-    def WriteConfusionMatrix(self,truth_path,preds_path,set1,threshold=0.9):
+    def WriteConfusionMatrix(self,images_path, truth_path,preds_path,set1,threshold=0.9):
         """
         This function write TP,FP,FN,PRECISION, RECALL into a file
 
         truth-path - is a path to the ground truth masks
         preds_path - is a path to the prediction masks
         """
-        if os.path.isfile("./evaluation/results/{}ConfusionMatrix{}.json".format(set1,self.iou_value)):
-            print("./evaluation/results/{}ConfusionMatrix{}.json already exists. Quitting.".format(set1,self.iou_value))
+        if os.path.exists("./evaluation/results/{}ConfusionMatrix%{}%{}.json".format(set1,self.confidence, self.iou_value)):
+            print("./evaluation/results/{}ConfusionMatrix%{}%{}.json already exists. Quitting.".format(set1,self.confidence,self.iou_value))
             return None
 
-        f= open("./evaluation/results/{}ConfusionMatrix{}.json".format(set1,self.iou_value),"w+")
+        f= open("./evaluation/results/{}ConfusionMatrix%{}%{}.json".format(set1,self.confidence,self.iou_value),"w+")
         all_detections = 0
         all_gt = 0
         total_tp = 0
         total_fp = 0
         total_fn = 0
         all_details = [] 
-        for index,truth_mask in enumerate(os.listdir(truth_path)):
-            truth = np.load(os.path.join(truth_path,truth_mask))
-            pred_name = truth_mask.replace("_truth.npy", "_mask2.npy")
-            pred = np.load(os.path.join(preds_path,pred_name))
-            pred = [mask_ for mask_ in pred if mask_["confidence"] > threshold]
-            s = MaskConstruction(image=None, truth=truth,mask=pred,threshold=threshold)
-            tp, fp, fn = self.ConfusionMatrix(truth,s.Contors(),kind="all")
+        for index,image_path in enumerate(os.listdir(images_path)):
+            image = cv.imread(os.path.join(images_path,image_path))
+            filename, ext = os.path.splitext(image_path)
+            truth_name = filename + "_truth.npy"
+            if not os.path.exists(os.path.join(truth_path,truth_name)):
+                # if the truth mask does not exist then there is no instances thus skip
+                continue
+            truth = np.load(os.path.join(truth_path,truth_name),allow_pickle=True)
+            # truth = np.load(os.path.join(truth_path,truth_mask), allow_pickle=True)
+            pred_name = filename + "_mask2.npy"
+            pred = np.load(os.path.join(preds_path,pred_name),allow_pickle=True)
+            pred = [mask_ for mask_ in pred if mask_["confidence"] > self.confidence]
+            s = MaskConstruction(image=image, truth=truth,mask=pred,threshold=self.confidence)
+            tp, fp, fn = self.ConfusionMatrix(truth,s.Contors())
             if (tp+fp) == 0:
                 continue
-            precision = tp / (tp+fp)
+            precision = tp / len(pred)#(tp+fp)
             recall = tp / truth.shape[0]
-            all_detections = all_detections + (tp+fp)
+            all_detections = all_detections + len(pred)#(tp+fp)
             all_gt = all_gt + truth.shape[0]
             total_tp = total_tp + tp
             total_fp = total_fp + fp
             total_fn = total_fn + fn
             r = {
-                "filename": truth_mask.replace("_truth.npy", ""),
+                "filename": filename,
                 "TP":tp,
                 "FP": fp,
                 "FN": fn,
                 "Precision":precision,
                 "Recall":recall,
-                "Detections":(tp+fp),
+                "Detections": len(pred),#(tp+fp),
                 "GT":truth.shape[0]
             }
             all_details.append(r)
@@ -172,7 +145,7 @@ class MaskRCNN_Evaluation(object):
         "FP(%)":total_fp/all_detections,
         "FN":total_fn/all_detections
         }
-        all_details.append(summary)
+        all_details.insert(0,summary)
         json.dump(all_details, f,indent=3)
         f.close()
         return None
@@ -224,14 +197,14 @@ class MaskRCNN_Evaluation(object):
         assert os.path.exists(preds_path),\
         "Path to the prediction masks provided is not valid. Check again."
 
-        assert set1=="test" or set1=="train", \
-        "set1 can only be 'test' or 'train'. You may have to rename yours sets to follow this naming style"
+        assert set1 in ["test", "train","val"], \
+        "set1 can only be 'test', 'train' or 'val. You may have to rename yours sets to follow this naming style"
 
         assert break_num==-1 or break_num > 0,\
         "Choose -1 to write all annotations or any positive integer to specify the number of annotations to write"
 
-        if os.path.exists("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value)):
-            print("./evaluation/results/{}AP{}.csv already exists. Quitting.".format(set1,self.iou_value))
+        if os.path.exists("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value)):
+            print("./evaluation/results/{}AP%{}%{}.csv already exists. Quitting.".format(set1,self.confidence,self.iou_value))
             return None
 
 
@@ -243,11 +216,12 @@ class MaskRCNN_Evaluation(object):
                 #Load image
                 image_ = os.path.join(images_path,image) 
                 filename, ext = os.path.splitext(image)
-                # Load prediction probability mask
+                # Load prediction mask
                 pred = os.path.join(preds_path,filename+"_mask2.npy")
-                pred = np.load(pred)
+                pred = np.load(pred, allow_pickle = True)
+                # Load truth mask
                 truth = os.path.join(truth_path,filename+"_truth.npy")
-                truth = np.load(truth)
+                truth = np.load(truth, allow_pickle = True)
                 # Determine the number of detections per image
                 num  = len(pred)
                 for i in range(num):
@@ -256,7 +230,7 @@ class MaskRCNN_Evaluation(object):
                     #print(pred[i])
                     # generate contours for a given detection
                     cont = np.array(s.Contors())
-                    tp,fp, _ = self.ConfusionMatrix(truth, cont, kind="one")
+                    tp,fp, _ = self.ConfusionMatrix(truth, cont)
                     # Take care of multiple detections overlapping one gt
                     if tp>1:
                         tp = 1
@@ -269,9 +243,10 @@ class MaskRCNN_Evaluation(object):
                     # concatenate the df of one detection to a mega one
                     metadf = pd.concat([metadf,df],axis=0,ignore_index=True)
             except FileNotFoundError as s:
-                # escape annotation file
-                print(s)
-                print("Skipped the annotation file")
+                pass
+                # escape annotation file and images with no fruits under truth annotations
+                # print(s)
+                # print("Skipped the annotation file or no predicted instances")
 
         # sort the pandas DF based on confidence
         metadf = metadf.sort_values(by="confidence",ascending=False)
@@ -284,18 +259,25 @@ class MaskRCNN_Evaluation(object):
         metadf["Recall"] = metadf["TP-CUM"]/all_gt
 
         #save the DF as csv file
-        metadf.to_csv("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value))
+        metadf.to_csv("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value), index = False)
 
         return metadf
 
 
     def PlotPrecisionRecallCurve(self,set1,display=False):
-        assert os.path.isfile("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value)),\
+        assert os.path.isfile("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value)),\
         "File containing precision and recall for this set does not exist. Please\
         run WriteAndDisplayPR() function"
-        df = pd.read_csv("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value))
+        df = pd.read_csv("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value))
         precision = df["Precision"]
         recall = df["Recall"]
+        if os.path.exists("./evaluation/results/PrecisionRecallCurve_{}AP%{}%{}.png".format(set1,self.confidence,self.iou_value)):
+            print("File already exists >>","./evaluation/results/PrecisionRecallCurve_{}AP%{}%{}.png".format(set1,self.confidence,self.iou_value))
+            if display == True:
+                pr_plot = plt.imread("./evaluation/results/PrecisionRecallCurve_{}AP%{}%{}.png".format(set1,self.confidence,self.iou_value))
+                plt.imshow(pr_plot)
+                plt.show()
+            return precision, recall, set1, self.iou_value
         plt.figure(figsize=(12,10))
         plt.grid(True)
         plt.plot(recall,precision,label="{}@{}".format(set1,self.iou_value),linewidth=2)
@@ -304,18 +286,21 @@ class MaskRCNN_Evaluation(object):
         plt.xlabel("Recall")
         plt.ylabel("Precision")
         plt.legend(loc="lower left")
-        plt.savefig("./evaluation/results/PrecisionRecallCurve_{}AP{}.png".format(set1,self.iou_value))
-        print("The plot has been saved as: PrecisionRecallCurve_{}".format("{}AP{}.png".format(set1,self.iou_value)))
+        plt.savefig("./evaluation/results/PrecisionRecallCurve_{}AP%{}%{}.png".format(set1,self.confidence,self.iou_value))
+        print("The plot has been saved as: PrecisionRecallCurve_{}".format("{}AP{}%{}%.png".format(set1,self.confidence,self.iou_value)))
         if display == True:
         	plt.show()
         return precision, recall, set1, self.iou_value
 
 
     def AP_NoInterpolation(self,set1):
-        assert os.path.isfile("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value)),\
+
+        assert os.path.isfile("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value)),\
         "File containing precision and recall for this set does not exist. Please\
         run WriteAndDisplayPR() function"
-        df = pd.read_csv("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value))
+
+        df = pd.read_csv("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value))
+
         precision = df["Precision"]
         recall = df["Recall"]
 
@@ -344,19 +329,21 @@ class MaskRCNN_Evaluation(object):
         "Interpolated Recall": mrec,
         "Misc" : ii
         }
-        with open("./evaluation/results/{}AP_valuesAP_NoInterpolation{}.json".format(set1,self.iou_value),"w+") as fp:
+        with open("./evaluation/results/{}AP_valuesAP_NoInterpolation%{}%{}.json".format(set1,self.confidence,self.iou_value),"w+") as fp:
             json.dump(r,fp,indent=3)
         return r
 
 
     def AP_11PointInterpolation(self,set1):
-        assert os.path.isfile("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value)),\
+
+        assert os.path.isfile("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value)),\
         "File contating precision and recall for this set does not exist. Please\
         run WriteAndDisplayPR() function"
-        df = pd.read_csv("./evaluation/results/{}AP{}.csv".format(set1,self.iou_value))
+
+        df = pd.read_csv("./evaluation/results/{}AP%{}%{}.csv".format(set1,self.confidence,self.iou_value))
         precision = df["Precision"]
         recall = df["Recall"]
-        # def CalculateAveragePrecision2(rec, prec):
+
         mrec = []
         # mrec.append(0)
         [mrec.append(e) for e in recall]
@@ -409,7 +396,7 @@ class MaskRCNN_Evaluation(object):
         "Misc": None
         }
 
-        with open("./evaluation/results/{}AP_values_11_PointInterpolation{}.json".format(set1,self.iou_value),"w+") as fp:
+        with open("./evaluation/results/{}AP_values_11_PointInterpolation%{}%{}.json".format(set1,self.confidence,self.iou_value),"w+") as fp:
             json.dump(r,fp,indent=3)
 
         return r

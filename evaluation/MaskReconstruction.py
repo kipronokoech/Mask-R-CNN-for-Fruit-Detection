@@ -25,17 +25,23 @@ class MaskConstruction(object):
 		"""
 		This function loads the truth masks (annotations)
 		"""
-		truth = np.load(self.truth,allow_pickle=True)
+		assert os.path.exists(self.truth),\
+		 "[FileNotFound] Truth file not found on {}. Exitting.".format(self.truth)
+
+		truth = np.load(self.truth, allow_pickle=True)
+		
 		return truth
 
 	def load_pred_mask(self):
 		"""
 		Load prediction masks
 		"""
-		pred = np.load(self.mask,allow_pickle=True)
+		assert os.path.exists(self.mask),"[FileNotFound] Truth file not found on {}. Exitting.".format(self.mask)
+		pred = np.load(self.mask, allow_pickle=True)
+		
 		return pred
 
-	def only_probs(self):
+	def getProbs(self):
 		#try loading the array
 		try: 
 			mask1 = self.load_pred_mask()
@@ -44,6 +50,20 @@ class MaskConstruction(object):
 			mask1 = self.mask
 		try:
 			only_mask = [mask1[index]["mask"] for index in range(len(mask1))\
+			if mask1[index]["confidence"]>self.threshold]
+			return np.array(only_mask)
+
+		except TypeError as e:
+			print(e)
+
+	def getBbox(self):
+		try: 
+			mask1 = self.load_pred_mask()
+		# else assume that the array as been loaded already
+		except:
+			mask1 = self.mask
+		try:
+			only_mask = [mask1[index]["box"] for index in range(len(mask1))\
 			if mask1[index]["confidence"]>self.threshold]
 			return np.array(only_mask)
 
@@ -62,7 +82,7 @@ class MaskConstruction(object):
 		thresh, im_bw = \
 		cv.threshold(np.uint8(img), 127, 255, cv.THRESH_BINARY) #im_bw: binary image
 		contours, hierarchy = \
-		cv.findContours(im_bw,cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+		cv.findContours(im_bw,cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
 		pts = []
 		n = len(contours[0])
 		for i in range(n):
@@ -76,8 +96,11 @@ class MaskConstruction(object):
 		return pts
 
 	def Contors(self):
-		mask = self.only_probs()
+		mask = self.getProbs()
+		if mask is None: # No instances detected
+			return None
 		np.putmask(mask,mask>=0.5,255)
+		np.putmask(mask,mask<0.5,0)
 		all_masks = []
 		for index in range(mask.shape[0]):
 			cont = self.findContors(mask[index])
@@ -86,9 +109,14 @@ class MaskConstruction(object):
 
 	def draw_contours(self,save_to=None, display=False):
 		contours = self.Contors()
-		n = len(contours)
 		image = self.load_image()
-		for j in range(n):
+		# in case there is no contors to draw, that is, n=0
+
+		if len(contours)==0 or contours is None:
+			print("No contours to draw.")
+			return None
+		n_instances = len(contours)
+		for j in range(n_instances):
 			ctr = contours[j]
 			img = cv.polylines(image,[np.int32(ctr)],
 				isClosed=True,color=(255,0,0),thickness=5)
@@ -117,3 +145,15 @@ class MaskConstruction(object):
 			plt.imshow(img)
 			plt.show()
 		return img
+
+	def drawBbox(self, display=False):
+		bboxes = self.getBbox()
+		img = self.load_image()
+		for i in range(len(bboxes)):
+			a1, a2, a3, a4 = bboxes[i]
+			image = cv.rectangle(img, (a2,a1), (a4,a3), color=(0,0,255), thickness=3)
+		if display==True:
+			plt.imshow(image)
+			plt.show()
+		return image
+

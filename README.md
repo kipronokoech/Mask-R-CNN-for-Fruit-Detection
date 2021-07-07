@@ -1,195 +1,241 @@
-    
-	
-# Mask R-CNN for Fruit Detection in an Orchard 
-## Dataset
-The dataset used in this project is a merge betweeen the following 3 datasets:
-- Aerobotics dataset - The images are sourced by flying the drone ∼ 2m above the tree canopy which generates 2.7k video imagery. These short videos are then segmented to generate images. 
-- FUJI dataset - This dataset is composed of images of apple trees
-captured using Microsoft Kinect v2.
-- ACFR dataset - This dataset was collected by a team in The University of Sydney, Australia. The orchard images were gathered using Shrimp. It contain images of apples, almonds and mangoes.
+# Mask R-CNN for Object Detection and Segmentation - 2021 updated for Tensorflow 2.4.1 (with Google Colab sample!)
 
-A total of 3372 images were collected from the above three sources - 2024 images used for training the model, 674 for validation and 674 for testing (a 60-20-20 split). All the images (both train, validation and test set) were manually annotated using VGG annotator [[link]](http://www.robots.ox.ac.uk/~vgg/software/via/via.html). The entire dataset with the annotations can be downloaded [here](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing). The contents of the link have the following structure:
-```bash
-Root: Mask-RCNN-for-Fruit_Detection
-│
-├── dataset├── fruits├── train > (train images and JSON annotation file.)
-│                    ├── val > (validation images and JSON annotation file.)
-│                    ├── test > (test images and JSON annotation file)
-│
-├── annotations (contains annotation files in JSON and CSV for all the 3 sets)
-│
-├── mask_rcnn_pretrained_weights > mask_rcnn_coco.h5
-│
-├── sets (contains image names for each set)
-│
-└── trained_model > mask_rcnn_fruit_0477.h5
+This is an implementation of [Mask R-CNN](https://arxiv.org/abs/1703.06870) on Python 3, Keras, and TensorFlow. The model generates bounding boxes and segmentation masks for each instance of an object in the image. It's based on Feature Pyramid Network (FPN) and a ResNet101 backbone.
+
+![Instance Segmentation Sample](assets/street.png)
+
+The repository includes:
+* Source code of Mask R-CNN built on FPN and ResNet101.
+* Training code for MS COCO
+* Pre-trained weights for MS COCO
+* Jupyter notebooks to visualize the detection pipeline at every step
+* ParallelModel class for multi-GPU training
+* Evaluation on MS COCO metrics (AP)
+* Example of training on your own dataset
+
+
+The code is documented and designed to be easy to extend. If you use it in your research, please consider citing this repository (bibtex below). If you work on 3D vision, you might find our recently released [Matterport3D](https://matterport.com/blog/2017/09/20/announcing-matterport3d-research-dataset/) dataset useful as well.
+This dataset was created from 3D-reconstructed spaces captured by our customers who agreed to make them publicly available for academic use. You can see more examples [here](https://matterport.com/gallery/).
+
+# Getting Started
+* [demo.ipynb](samples/demo.ipynb) Is the easiest way to start. It shows an example of using a model pre-trained on MS COCO to segment objects in your own images.
+It includes code to run object detection and instance segmentation on arbitrary images.
+
+* [train_shapes.ipynb](samples/shapes/train_shapes.ipynb) shows how to train Mask R-CNN on your own dataset. This notebook introduces a toy dataset (Shapes) to demonstrate training on a new dataset.
+
+* ([model.py](mrcnn/model.py), [utils.py](mrcnn/utils.py), [config.py](mrcnn/config.py)): These files contain the main Mask RCNN implementation. 
+
+
+* [inspect_data.ipynb](samples/coco/inspect_data.ipynb). This notebook visualizes the different pre-processing steps
+to prepare the training data.
+
+* [inspect_model.ipynb](samples/coco/inspect_model.ipynb) This notebook goes in depth into the steps performed to detect and segment objects. It provides visualizations of every step of the pipeline.
+
+* [inspect_weights.ipynb](samples/coco/inspect_weights.ipynb)
+This notebooks inspects the weights of a trained model and looks for anomalies and odd patterns.
+
+
+# Step by Step Detection
+To help with debugging and understanding the model, there are 3 notebooks 
+([inspect_data.ipynb](samples/coco/inspect_data.ipynb), [inspect_model.ipynb](samples/coco/inspect_model.ipynb),
+[inspect_weights.ipynb](samples/coco/inspect_weights.ipynb)) that provide a lot of visualizations and allow running the model step by step to inspect the output at each point. Here are a few examples:
+
+
+
+## 1. Anchor sorting and filtering
+Visualizes every step of the first stage Region Proposal Network and displays positive and negative anchors along with anchor box refinement.
+![](assets/detection_anchors.png)
+
+## 2. Bounding Box Refinement
+This is an example of final detection boxes (dotted lines) and the refinement applied to them (solid lines) in the second stage.
+![](assets/detection_refinement.png)
+
+## 3. Mask Generation
+Examples of generated masks. These then get scaled and placed on the image in the right location.
+
+![](assets/detection_masks.png)
+
+## 4.Layer activations
+Often it's useful to inspect the activations at different layers to look for signs of trouble (all zeros or random noise).
+
+![](assets/detection_activations.png)
+
+## 5. Weight Histograms
+Another useful debugging tool is to inspect the weight histograms. These are included in the inspect_weights.ipynb notebook.
+
+![](assets/detection_histograms.png)
+
+## 6. Logging to TensorBoard
+TensorBoard is another great debugging and visualization tool. The model is configured to log losses and save weights at the end of every epoch.
+
+![](assets/detection_tensorboard.png)
+
+## 6. Composing the different pieces into a final result
+
+![](assets/detection_final.png)
+
+
+# Training on MS COCO
+We're providing pre-trained weights for MS COCO to make it easier to start. You can
+use those weights as a starting point to train your own variation on the network.
+Training and evaluation code is in `samples/coco/coco.py`. You can import this
+module in Jupyter notebook (see the provided notebooks for examples) or you
+can run it directly from the command line as such:
+
+```
+# Train a new model starting from pre-trained COCO weights
+python3 samples/coco/coco.py train --dataset=/path/to/coco/ --model=coco
+
+# Train a new model starting from ImageNet weights
+python3 samples/coco/coco.py train --dataset=/path/to/coco/ --model=imagenet
+
+# Continue training a model that you had trained earlier
+python3 samples/coco/coco.py train --dataset=/path/to/coco/ --model=/path/to/weights.h5
+
+# Continue training the last model you trained. This will find
+# the last trained weights in the model directory.
+python3 samples/coco/coco.py train --dataset=/path/to/coco/ --model=last
 ```
 
-## Sample images in the dataset
-Here are some samples of the images used in this project
-[images]
-<table style="width:100%">
-  <tr>
-    <th><img src="assets/datasets/fruits2/train/20151124T044642.641468_i2238j1002.png" width=400></th>
-    <th><img src="assets/datasets/fruits2/train/20130320T004849.903118.Cam6_43.png" width=400></th>
-  </tr>
-  <tr>
-    <th><img src="assets/datasets/fruits2/train/_MG_8080_08.jpg" width=400></th>
-    <th><img src="assets/datasets/fruits2/test/20151124T024524.796253_i1870j760.png" width=400></th>
-  </tr>
-</table>
-
-## Repository Structure
-Repository: Mask-R-CNN-for-Fruit-Detection
-```bash
-Root:
-├── Python
-├── assets├── datasets├── fruits├── train > (5 sample images and annotation file.)
-│         │                     ├── val > (3 sample images and annotation file.)
-│         │                     ├── test > (3 sample images and annotation file.)
-│         ├── history > training-stats
-│         ├── logs > trained-models
-├── evaluation ├── results > model performance
-│              ├── truth_masks ├── test_masks_truth > truth masks for test set.
-│              │               ├── train_masks_truth > truth masks for train set.
-│              ├── Evaluation.py
-│              ├── MaskReconstruction.py
-│              ├── generate_truth-masks.py
-│              ├── metrics.pdf
-│              ├── runMain.py
-├── mrcnn├── __init__.py
-│        ├── config.py   
-│        ├── model.py
-│        ├── parallel_model.py
-│        ├── utils.py
-│        ├── visualize.py
-├── example-output > images and plots used only within this README.md file
-├── setup.py
-├── README.md
-├── requirements.txt
-├── via.html
-└── .gitignore
+You can also run the COCO evaluation code with:
+```
+# Run COCO evaluation on the last trained model
+python3 samples/coco/coco.py evaluate --dataset=/path/to/coco/ --model=last
 ```
 
-## Detailed description of repository content
-- [Python](Python) - This folder contains [fruits.ipynb](Python/fruits.ipynb) notebook. Mask R-CNN model is trained and tested in this notebook.
-- [assets](assets) - This folder contains 3 sub-directories datasets, history, and logs:
-	- [datasets/fruits/train](assets/datasets/fruits/train) - this folder consist of training images and corresponding JSON annotations file. Read more about JSON [here](https://medium.com/analytics-vidhya/python-dictionary-and-json-a-comprehensive-guide-ceed58a3e2ed).
-	- [datasets/fruits/val](assets/datasets/fruits/val) - contains validation images and the annotations file in JSON format. 
-	- [datasets/fruits/test](assets/datasets/fruits/test) - contains model testing images and the JSON annotation file. 
-	- [history](assets/history) - this directory holds (or will hold) the training statistics - accuracy and losses. These statistics can also be obtained from Tensorbord [[link]](https://www.tensorflow.org/tensorboard) during and/or after model training.
-	- [logs](assets/logs) - trained model is saved here. For any particular model training instance, a subdirectory will be created and the model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the repository contains  [fruit20200802T0017](assets/logs/fruit20200802T0017) for the model training that was initiated on Aug,2 2020 at 0017H. 
-- [evaluation](evaluation) - Trained model is evaluated using files in this directory. The folder contains the following directories, subdirectories, and files:
-	- [metrics.pdf](evaluation/metrics.pdf) - This PDF file discusses the following: The sourcing of data, the metrics used to evaluate the model, and the performance of Mask R-CNN on fruit detection task based on those metrics.
-	- [results](evaluation/results) - contains the model perfomance stats based on object detection metrics - Confusion Matrix, Precision, Recall, Average precision, and Precision x Recall curve.
-	- [generate_truth_masks.py](evaluation/generate_truth-masks.py) - This script is used to generate the annotations/labels for each image. This is important for per-image evaluation.
-	(Ideally, this should be the first script to be executed during evaluation). Executing this script creates `truth_masks` folder which contains per-image ground-truth masks for both train, validation and test set. 
-	- [Evaluation.py](evaluation/Evaluation.py) contains a class that defines all the metrics used in the project: Confusion matrix, AP, Precision, and Recall.
-	- [MaskReconstruction.py](evaluation/MaskReconstruction.py) - This script contains all functions related to manipulation of model output from contour reconstruction to drawing and writing contours.
-	- [runMain.py](evaluation/runMain.py) - Running this script calls MaskRCNN_Evaluation class in Evaluation.py. The script is mainly used to generate and save the results (important).
-- [mrcnn](mrcnn) - this folder contains all the core files needed to train Mask R-CNN. The model itself is defined in [model.py](mrcnn/model.py). Other files in the folder includes [config.py](mrcnn/config.py) (contains Configuration class for Mask R-CNN - defines configuration parameters like input size, epochs, convolution backbone e.t.c.), [parallel_model.py](mrcnn/parallel_model.py) (to set up parallel processing), [utils.py](mrcnn/utils.py) (contains common utility functions and classes), [visualize.py](mrcnn/visualize.py) (facilitate visualization of model output).
-- [example-output](example-output) - Used for output visualization. The content of the folder is used to display the results in this README.md file and nothing else. For this reason, the contents of the folder are not consequential in reproducing the results.
-- [requirements.txt](requirements.txt) - contains all the libraries and packages required to run the model. Specific versions of libraries are defined to ease reproducibility.
-- [setup.py](setup.py) - This file is executed as a part of the setup process. The process installs the necessary dependencies that are missing. Once you have gone through `Setup` section below executing this file won't be necessary.
-- [via.html](via.html) - This is fully-fledged VGG annotator. The online version of the annotator can be accessed
-[here.](http://www.robots.ox.ac.uk/~vgg/software/via/via.html)
+The training schedule, learning rate, and other parameters should be set in `samples/coco/coco.py`.
 
-## Setup
-- Clone this repository
-- [Optional] Set up Python virtual environment - You may find [this article](https://medium.com/analytics-vidhya/creating-python-virtual-environment-and-how-to-add-it-to-jupyter-notebook-4cdb41717582) helpful.
-- Upgrade pip and setup tools
-```bash
-pip install -U setuptools
-python3 -m pip install --upgrade pip
+
+# Training on Your Own Dataset
+
+Start by reading this [blog post about the balloon color splash sample](https://engineering.matterport.com/splash-of-color-instance-segmentation-with-mask-r-cnn-and-tensorflow-7c761e238b46). It covers the process starting from annotating images to training to using the results in a sample application.
+
+In summary, to train the model on your own dataset you'll need to extend two classes:
+
+```Config```
+This class contains the default configuration. Subclass it and modify the attributes you need to change.
+
+```Dataset```
+This class provides a consistent way to work with any dataset. 
+It allows you to use new datasets for training without having to change 
+the code of the model. It also supports loading multiple datasets at the
+same time, which is useful if the objects you want to detect are not 
+all available in one dataset. 
+
+See examples in `samples/shapes/train_shapes.ipynb`, `samples/coco/coco.py`, `samples/balloon/balloon.py`, and `samples/nucleus/nucleus.py`.
+
+## Differences from the Official Paper
+This implementation follows the Mask RCNN paper for the most part, but there are a few cases where we deviated in favor of code simplicity and generalization. These are some of the differences we're aware of. If you encounter other differences, please do let us know.
+
+* **Image Resizing:** To support training multiple images per batch we resize all images to the same size. For example, 1024x1024px on MS COCO. We preserve the aspect ratio, so if an image is not square we pad it with zeros. In the paper the resizing is done such that the smallest side is 800px and the largest is trimmed at 1000px.
+* **Bounding Boxes**: Some datasets provide bounding boxes and some provide masks only. To support training on multiple datasets we opted to ignore the bounding boxes that come with the dataset and generate them on the fly instead. We pick the smallest box that encapsulates all the pixels of the mask as the bounding box. This simplifies the implementation and also makes it easy to apply image augmentations that would otherwise be harder to apply to bounding boxes, such as image rotation.
+
+    To validate this approach, we compared our computed bounding boxes to those provided by the COCO dataset.
+We found that ~2% of bounding boxes differed by 1px or more, ~0.05% differed by 5px or more, 
+and only 0.01% differed by 10px or more.
+
+* **Learning Rate:** The paper uses a learning rate of 0.02, but we found that to be
+too high, and often causes the weights to explode, especially when using a small batch
+size. It might be related to differences between how Caffe and TensorFlow compute 
+gradients (sum vs mean across batches and GPUs). Or, maybe the official model uses gradient
+clipping to avoid this issue. We do use gradient clipping, but don't set it too aggressively.
+We found that smaller learning rates converge faster anyway so we go with that.
+
+## Citation
+Use this bibtex to cite this repository:
 ```
-- Install the dependencies from [requirements.txt](requirements.txt)
-```bash
-pip3 install -r requirements.txt
+@misc{matterport_maskrcnn_2017,
+  title={Mask R-CNN for object detection and instance segmentation on Keras and TensorFlow},
+  author={Waleed Abdulla},
+  year={2017},
+  publisher={Github},
+  journal={GitHub repository},
+  howpublished={\url{https://github.com/matterport/Mask_RCNN}},
+}
 ```
-- Download the datasets and Mask R-CNN pre-trained weights [[link]](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing) into corresponding folders. The pre-trained weights can be downloaded [here](https://github.com/matterport/Mask_RCNN/releases) as well. The weights should be saved in [assets](assets) folder.
-- [Optional] The trained model `trained_model/mask_rcnn_fruit_0477.h5` used to generate the results is part of the content of the above link. If you are interested in reproducing the results without training the model place this file in the [logs](assets/logs/fruit20200802T0017) folder. \
-- Evaluation:
-	- Generate per-image truth masks by executing [generate_truth-masks.py](evaluation/generate_truth-masks.py).
-	- Execute [runMain.py](evaluation/runMain.py) in order to generate evaluation results. All the evaluation results will be written into [results](evaluation/results) folder.
+
+## Contributing
+Contributions to this repository are welcome. Examples of things you can contribute:
+* Speed Improvements. Like re-writing some Python code in TensorFlow or Cython.
+* Training on other datasets.
+* Accuracy Improvements.
+* Visualizations and examples.
+
+You can also [join our team](https://matterport.com/careers/) and help us build even more projects like this one.
+
+## Requirements
+Python 3.4, TensorFlow 1.3, Keras 2.0.8 and other common packages listed in `requirements.txt`.
+
+### MS COCO Requirements:
+To train or test on MS COCO, you'll also need:
+* pycocotools (installation instructions below)
+* [MS COCO Dataset](http://cocodataset.org/#home)
+* Download the 5K [minival](https://dl.dropboxusercontent.com/s/o43o90bna78omob/instances_minival2014.json.zip?dl=0)
+  and the 35K [validation-minus-minival](https://dl.dropboxusercontent.com/s/s3tw5zcg7395368/instances_valminusminival2014.json.zip?dl=0)
+  subsets. More details in the original [Faster R-CNN implementation](https://github.com/rbgirshick/py-faster-rcnn/blob/master/data/README.md).
+
+If you use Docker, the code has been verified to work on
+[this Docker container](https://hub.docker.com/r/waleedka/modern-deep-learning/).
 
 
-## Training progress plot
-The following plots shows training losses for 150 epochs:
-<table width="100%">
-	<tr>
-		<th><img src="example-output/mask_rcnn_class_loss.png" width=400></th>
-		<th><img src="example-output/mask_rcnn_loss.png" width=400></th>
-		<th><img src="example-output/mask_rcnn_mass_loss.png" width=400></th>
-	</tr>
-</table>
+## Installation
+1. Clone this repository
+2. Install dependencies
+   ```bash
+   pip3 install -r requirements.txt
+   ```
+3. Run setup from the repository root directory
+    ```bash
+    python3 setup.py install
+    ``` 
+3. Download pre-trained COCO weights (mask_rcnn_coco.h5) from the [releases page](https://github.com/matterport/Mask_RCNN/releases).
+4. (Optional) To train or test on MS COCO install `pycocotools` from one of these repos. They are forks of the original pycocotools with fixes for Python3 and Windows (the official repo doesn't seem to be active anymore).
 
-## Sample Mask RCNN results
-- Column 1: RGB Image from the test set.
-- Column 2: Truth Masks.
-- Column 3: Mask R-CNN Output (Confidence, bounding box, and segmentation mask).
-- Column 4: Segmentation Mask.
+    * Linux: https://github.com/waleedka/coco
+    * Windows: https://github.com/philferriere/cocoapi.
+    You must have the Visual C++ 2015 build tools on your path (see the repo for additional details)
 
-<table width="100%">
-	<tr>
-		<th><img src="example-output/1.jpg" width=400></th>
-		<th><img src="example-output/1_truthmask.png" width=400 height="100%"></th>
-		<th><img src="example-output/1_mask.png" width=400></th>
-		<th><img src="example-output/1_predmask.png" width=400></th>
-	</tr>
-	<tr>
-		<th><img src="example-output/3.png" width=400></th>
-		<th><img src="example-output/3_truthmask.png" width=400></th>
-		<th><img src="example-output/3_mask.png" width=400></th>
-		<th><img src="example-output/3_predmask.png" width=400></th>
-	</tr>
-	<tr>
-		<th><img src="example-output/2.png" width=400></th>
-		<th><img src="example-output/2_truthmask.png" width=400></th>
-		<th><img src="example-output/2_mask.png" width=400></th>
-		<th><img src="example-output/2_predmask.png" width=400></th>
-	</tr>
-</table>
+# Projects Using this Model
+If you extend this model to other datasets or build projects that use it, we'd love to hear from you.
 
-## Evaluation
-A detailed description of the performance metrics used in this project can be found in [metrics.pdf](evaluation/metrics.pdf). Here are some articles you may find helpful as well [[link1]](https://towardsdatascience.com/on-object-detection-metrics-with-worked-example-216f173ed31e), [[link2]](https://towardsdatascience.com/confusion-matrix-and-object-detection-f0cbcb634157).
-### Confusion Matrix
-| IoU Threshold  |  Set | True Positive(%)  | False Positive(%)| False Negative(%)|
-|---|---|---|---|---|
-| 0.2  |  Train | 91.48  | 8.51 |7.82|
-|      |  Test  |  88.25 | 11.75|15.40|
-|---|---|---|---|---|
-| 0.3  | Train  |  91.35 |8.65 |7.96 |
-|    | Test |87.86 |12.14 | 15.79  |
-|---|---|---|---|---|
-| 0.4  | Train  |  91.16 |8.84 |8.14 |
-|    | Test |87.17 |12.83 | 16.48  |
-|---|---|---|---|---|
-| 0.5  | Train  |  90.61 |9.39 |8.70 |
-|    | Test |85.65 |14.35 | 18.01 |
-|---|---|---|---|---|
+### [4K Video Demo](https://www.youtube.com/watch?v=OOT3UIXZztE) by Karol Majek.
+[![Mask RCNN on 4K Video](assets/4k_video.gif)](https://www.youtube.com/watch?v=OOT3UIXZztE)
 
-### Average Precision at different thresholds
-| Set  |  AP@20 | AP@30 | AP@40| AP@50|
-|---|---|---|---|---|
-| Train  |  0.9625 | 0.9514| 0.9457 |0.9344|
-| Test   |  0.8997  | 0.8854 | 0.8732|0.8470|
+### [Images to OSM](https://github.com/jremillard/images-to-osm): Improve OpenStreetMap by adding baseball, soccer, tennis, football, and basketball fields.
 
-### Precision x Recall curves
+![Identify sport fields in satellite images](assets/images_to_osm.png)
 
-<table width="100%">
-	<tr>
-		<th><img src="example-output/PRCurve_forDifferentThresholds_train.png"></th>
-		<th><img src="example-output/PRCurve_forDifferentThresholds_test.png"></th>
-	</tr>
-</table>
+### [Splash of Color](https://engineering.matterport.com/splash-of-color-instance-segmentation-with-mask-r-cnn-and-tensorflow-7c761e238b46). A blog post explaining how to train this model from scratch and use it to implement a color splash effect.
+![Balloon Color Splash](assets/balloon_color_splash.gif)
 
-### References
 
-1. He, K., Gkioxari, G., Dollar, P., and Girshick, R. Mask R-CNN. 2017 IEEE International Conference on Computer Vision (ICCV), Oct 2017. doi: 10.1109/iccv.2017.322. [1](https://arxiv.org/abs/1703.06870) [2](http://dx.doi.org/10.1109/ICCV.2017.322)
+### [Segmenting Nuclei in Microscopy Images](samples/nucleus). Built for the [2018 Data Science Bowl](https://www.kaggle.com/c/data-science-bowl-2018)
+Code is in the `samples/nucleus` directory.
 
-2. Padilla, R., Netto, S. L., and da Silva, E. A. A survey on performance metrics for object-detection algorithms. In 2020 International Conference on Systems, Signals and Image Processing (IWSSIP), pages 237–242. IEEE, 2020.
+![Nucleus Segmentation](assets/nucleus_segmentation.png)
 
-3. Datasets:
-	- [Entire dataset (Merge of FUJI, ACFR and Aerobotics datasets)](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing).
-	- [FUJI dataset](https://zenodo.org/record/3715991).
-	- [ACFR dataset](http://data.acfr.usyd.edu.au/ag/treecrops/2016-multifruit/).
+### [Detection and Segmentation for Surgery Robots](https://github.com/SUYEgit/Surgery-Robot-Detection-Segmentation) by the NUS Control & Mechatronics Lab.
+![Surgery Robot Detection and Segmentation](https://github.com/SUYEgit/Surgery-Robot-Detection-Segmentation/raw/master/assets/video.gif)
+
+### [Reconstructing 3D buildings from aerial LiDAR](https://medium.com/geoai/reconstructing-3d-buildings-from-aerial-lidar-with-ai-details-6a81cb3079c0)
+A proof of concept project by [Esri](https://www.esri.com/), in collaboration with Nvidia and Miami-Dade County. Along with a great write up and code by Dmitry Kudinov, Daniel Hedges, and Omar Maher.
+![3D Building Reconstruction](assets/project_3dbuildings.png)
+
+### [Usiigaci: Label-free Cell Tracking in Phase Contrast Microscopy](https://github.com/oist/usiigaci)
+A project from Japan to automatically track cells in a microfluidics platform. Paper is pending, but the source code is released.
+
+![](assets/project_usiigaci1.gif) ![](assets/project_usiigaci2.gif)
+
+### [Characterization of Arctic Ice-Wedge Polygons in Very High Spatial Resolution Aerial Imagery](http://www.mdpi.com/2072-4292/10/9/1487)
+Research project to understand the complex processes between degradations in the Arctic and climate change. By Weixing Zhang, Chandi Witharana, Anna Liljedahl, and Mikhail Kanevskiy.
+![image](assets/project_ice_wedge_polygons.png)
+
+### [Mask-RCNN Shiny](https://github.com/huuuuusy/Mask-RCNN-Shiny)
+A computer vision class project by HU Shiyu to apply the color pop effect on people with beautiful results.
+![](assets/project_shiny1.jpg)
+
+### [Mapping Challenge](https://github.com/crowdAI/crowdai-mapping-challenge-mask-rcnn): Convert satellite imagery to maps for use by humanitarian organisations.
+![Mapping Challenge](assets/mapping_challenge.png)
+
+### [GRASS GIS Addon](https://github.com/ctu-geoforall-lab/i.ann.maskrcnn) to generate vector masks from geospatial imagery. Based on a [Master's thesis](https://github.com/ctu-geoforall-lab-projects/dp-pesek-2018) by Ondřej Pešek.
+![GRASS GIS Image](assets/project_grass_gis.png)

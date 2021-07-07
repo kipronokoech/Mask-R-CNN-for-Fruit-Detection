@@ -6,13 +6,13 @@ os.chdir("../")
 if not os.path.exists("./evaluation/truth_masks"):
 	os.mkdir("./evaluation/truth_masks")
 
-sets = ["train","val"]
+sets = ["train","val","test"]
 #Looping throught both test and train set.
 for set_ in sets:
 	#Define the annotations file
 	# if the set is train then the file is in "train" folder
 	# else if the set is test the file is in the "val" folder
-	file_ = "assets/datasets/fruits/{}/via_project_fruits.json".format(set_)
+	file_ = "datasets/fruits2/{}/via_project_fruits.json".format(set_)
 
 	#Load the fole content - note that it is loaded as string.
 	with open(file_,"r") as fp:
@@ -37,15 +37,10 @@ for set_ in sets:
 			all_masks.append(one)
 		new_name = filename+"_truth.npy"
 
-		if set_ == "val":
-			set_name = "test"
-		else:
-			set_name = "train"
-
-		if not os.path.exists("evaluation/truth_masks/{}_masks_truth".format(set_name)):
-			os.mkdir("evaluation/truth_masks/{}_masks_truth".format(set_name))
-		to_path = os.path.join(os.getcwd(),"evaluation/truth_masks/{}_masks_truth".format(set_name),new_name)
-		if os.path.exists(os.path.join(os.getcwd(),"evaluation/truth_masks/{}_masks_truth".format(set_name),new_name)):
+		if not os.path.exists("evaluation/truth_masks/fruits2/{}_masks_truth".format(set_)):
+			os.makedirs("evaluation/truth_masks/fruits2/{}_masks_truth".format(set_))
+		to_path = os.path.join(os.getcwd(),"evaluation/truth_masks/fruits2/{}_masks_truth".format(set_),new_name)
+		if os.path.exists(os.path.join(os.getcwd(),"evaluation/truth_masks/fruits2/{}_masks_truth".format(set_),new_name)):
 			continue
 		# save the truth masks as numpy array
 		np.save(to_path, np.array(all_masks))
