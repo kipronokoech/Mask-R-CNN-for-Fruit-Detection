@@ -12,17 +12,15 @@ A total of 3372 images were collected from the above three sources - 2024 images
 ```bash
 Root: Mask-RCNN-for-Fruit_Detection
 │
-├── dataset├── fruits├── train > (train images and JSON annotation file.)
-│                    ├── val > (validation images and JSON annotation file.)
-│                    ├── test > (test images and JSON annotation file)
+├── dataset├── fruits2├── train > (train images and JSON annotation file.)
+│                     ├── val > (validation images and JSON annotation file.)
+│                     ├── test > (test images and JSON annotation file)
 │
 ├── annotations (contains annotation files in JSON and CSV for all the 3 sets)
 │
 ├── mask_rcnn_pretrained_weights > mask_rcnn_coco.h5
 │
-├── sets (contains image names for each set)
-│
-└── trained_model > mask_rcnn_fruit_0477.h5
+└── sets (contains image names for each set)
 ```
 
 ## Sample images in the dataset
@@ -30,12 +28,12 @@ Here are some samples of the images used in this project
 [images]
 <table style="width:100%">
   <tr>
-    <th><img src="datasets/fruits2/train/20151124T044642.641468_i2238j1002.png" width=400></th>
-    <th><img src="datasets/fruits2/train/20130320T004849.903118.Cam6_43.png" width=400></th>
+    <th><img src="orchard_sample_images/20151124T044642.641468_i2238j1002.png" width=400></th>
+    <th><img src="orchard_sample_images/20130320T004849.903118.Cam6_43.png" width=400></th>
   </tr>
   <tr>
-    <th><img src="datasets/fruits2/train/_MG_8080_08.jpg" width=400></th>
-    <th><img src="datasets/fruits2/test/20151124T024524.796253_i1870j760.png" width=400></th>
+    <th><img src="orchard_sample_images/_MG_8080_08.jpg" width=400></th>
+    <th><img src="orchard_sample_images/20151124T024524.796253_i1870j760.png" width=400></th>
   </tr>
 </table>
 
@@ -44,11 +42,11 @@ Repository: Mask-R-CNN-for-Fruit-Detection
 ```bash
 Root:
 ├── Python
-├── assets├── datasets├── fruits├── train > (5 sample images and annotation file.)
-│         │                     ├── val > (3 sample images and annotation file.)
-│         │                     ├── test > (3 sample images and annotation file.)
-│         ├── history > training-stats
-│         ├── logs > trained-models
+├── assets├── datasets├── fruits2├── train > (put train images here)
+│         │                      ├── val > (put val images in this folder)
+│         │                      ├── test > (put test images here)
+│         ├── history > training-stats (tensorboard output)
+│         ├── assets ├──logs > trained-model
 ├── evaluation ├── results > model performance
 │              ├── truth_masks ├── test_masks_truth > truth masks for test set.
 │              │               ├── train_masks_truth > truth masks for train set.
@@ -56,29 +54,35 @@ Root:
 │              ├── MaskReconstruction.py
 │              ├── generate_truth-masks.py
 │              ├── metrics.pdf
-│              ├── runMain.py
+│              ├── runMain-Loop.py
+│ 						 ├── runMain-One.py
 ├── mrcnn├── __init__.py
 │        ├── config.py   
 │        ├── model.py
 │        ├── parallel_model.py
 │        ├── utils.py
 │        ├── visualize.py
+├── samples ├── balloon
+│           ├── coco
+│           ├── fruits2
+│           ├── nucleus
+│           ├── shapes
+│           ├── demo.ipynb
 ├── example-output > images and plots used only within this README.md file
 ├── setup.py
 ├── README.md
 ├── requirements.txt
 ├── via.html
-└── .gitignore
+├── licence files
+└── .gitignore 
 ```
 
 ## Detailed description of repository content
-- [Python](Python) - This folder contains [fruits.ipynb](Python/fruits.ipynb) notebook. Mask R-CNN model is trained and tested in this notebook.
-- [assets](assets) - This folder contains 3 sub-directories datasets, history, and logs:
-	- [datasets/fruits/train](assets/datasets/fruits/train) - this folder consist of training images and corresponding JSON annotations file. Read more about JSON [here](https://medium.com/analytics-vidhya/python-dictionary-and-json-a-comprehensive-guide-ceed58a3e2ed).
-	- [datasets/fruits/val](assets/datasets/fruits/val) - contains validation images and the annotations file in JSON format. 
-	- [datasets/fruits/test](assets/datasets/fruits/test) - contains model testing images and the JSON annotation file. 
-	- [history](assets/history) - this directory holds (or will hold) the training statistics - accuracy and losses. These statistics can also be obtained from Tensorbord [[link]](https://www.tensorflow.org/tensorboard) during and/or after model training.
+- [samples/fruits2](samples/fruits2) - This folder contains [codes for training](samples/fruits2/fruits_train_TF2.ipynb) Mask R-CNN on orchard images and the codes for [running detection](samples/fruits2/fruits_detect_TF2.ipynb) using trained model.
+- [assets](assets) - This folder logs directory. Logs directory (will) contain models logs are saved here during model training. The folder also contrains history folder.
 	- [logs](assets/logs) - trained model is saved here. For any particular model training instance, a subdirectory will be created and the model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the repository contains  [fruit20200802T0017](assets/logs/fruit20200802T0017) for the model training that was initiated on Aug,2 2020 at 0017H. 
+	- [history](assets/history) - this directory holds (or will hold) the training statistics - accuracy and losses. These statistics can also be obtained from Tensorbord [[link]](https://www.tensorflow.org/tensorboard) during and/or after model training.
+
 - [evaluation](evaluation) - Trained model is evaluated using files in this directory. The folder contains the following directories, subdirectories, and files:
 	- [metrics.pdf](evaluation/metrics.pdf) - This PDF file discusses the following: The sourcing of data, the metrics used to evaluate the model, and the performance of Mask R-CNN on fruit detection task based on those metrics.
 	- [results](evaluation/results) - contains the model perfomance stats based on object detection metrics - Confusion Matrix, Precision, Recall, Average precision, and Precision x Recall curve.
@@ -86,7 +90,9 @@ Root:
 	(Ideally, this should be the first script to be executed during evaluation). Executing this script creates `truth_masks` folder which contains per-image ground-truth masks for both train, validation and test set. 
 	- [Evaluation.py](evaluation/Evaluation.py) contains a class that defines all the metrics used in the project: Confusion matrix, AP, Precision, and Recall.
 	- [MaskReconstruction.py](evaluation/MaskReconstruction.py) - This script contains all functions related to manipulation of model output from contour reconstruction to drawing and writing contours.
-	- [runMain.py](evaluation/runMain.py) - Running this script calls MaskRCNN_Evaluation class in Evaluation.py. The script is mainly used to generate and save the results (important).
+	- [runMain-One.py](evaluation/runMain-One.py) - Running this script calls MaskRCNN_Evaluation class in Evaluation.py. Use this script to run detection in one sample image and generate model performance results.
+	- [runMain-Loop.py](evaluation/runMain-Loop.py) - Running this script calls MaskRCNN_Evaluation class in Evaluation.py. The script is mainly used to run detections, generate and save the results for all the images in train, val and test sets(important).
+
 - [mrcnn](mrcnn) - this folder contains all the core files needed to train Mask R-CNN. The model itself is defined in [model.py](mrcnn/model.py). Other files in the folder includes [config.py](mrcnn/config.py) (contains Configuration class for Mask R-CNN - defines configuration parameters like input size, epochs, convolution backbone e.t.c.), [parallel_model.py](mrcnn/parallel_model.py) (to set up parallel processing), [utils.py](mrcnn/utils.py) (contains common utility functions and classes), [visualize.py](mrcnn/visualize.py) (facilitate visualization of model output).
 - [example-output](example-output) - Used for output visualization. The content of the folder is used to display the results in this README.md file and nothing else. For this reason, the contents of the folder are not consequential in reproducing the results.
 - [requirements.txt](requirements.txt) - contains all the libraries and packages required to run the model. Specific versions of libraries are defined to ease reproducibility.

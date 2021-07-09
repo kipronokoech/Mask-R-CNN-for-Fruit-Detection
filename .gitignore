@@ -4,10 +4,13 @@ __pycache__
 DataPreparation
 evaluation/example
 evaluation/misc
-evaluation/results
 evaluation/summary_results*
 evaluation/test.py
 evaluation/tiled.py
-evaluation/truth_masks
 evaluation/MaskReconstruction (copy).py
 output/*
+datasets/fruits2/sets
+datasets/fruits2/sets/train.csv
+datasets/fruits2/sets/val.csv
+datasets/fruits2/sets/test.csv
+summary.py
