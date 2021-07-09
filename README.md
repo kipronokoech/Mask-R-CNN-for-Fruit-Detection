@@ -47,6 +47,7 @@ Root:
 │         │                      ├── test > (put test images here)
 │         ├── history > training-stats (tensorboard output)
 │         ├── assets ├──logs > trained-model
+│
 ├── evaluation ├── results > model performance
 │              ├── truth_masks ├── test_masks_truth > truth masks for test set.
 │              │               ├── train_masks_truth > truth masks for train set.
@@ -56,18 +57,21 @@ Root:
 │              ├── metrics.pdf
 │              ├── runMain-Loop.py
 │ 						 ├── runMain-One.py
+│
 ├── mrcnn├── __init__.py
 │        ├── config.py   
 │        ├── model.py
 │        ├── parallel_model.py
 │        ├── utils.py
 │        ├── visualize.py
+│
 ├── samples ├── balloon
 │           ├── coco
 │           ├── fruits2
 │           ├── nucleus
 │           ├── shapes
 │           ├── demo.ipynb
+│
 ├── example-output > images and plots used only within this README.md file
 ├── setup.py
 ├── README.md
