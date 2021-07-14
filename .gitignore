@@ -1,6 +1,7 @@
 venv
 __pycache__
 .ipynb_checkpoints
+mask_rcnn_coco.h5
 DataPreparation
 evaluation/example
 evaluation/misc
