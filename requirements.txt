@@ -1,7 +1,7 @@
 numpy==1.19.2
 tensorflow==2.5.0   
 scipy==1.4.1 
-Pillow==7.1.2  
+Pillow==8.2.0  
 Cython==0.29.23   
 matplotlib==3.2.2  
 scikit-image==0.16.2
