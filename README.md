@@ -18,8 +18,6 @@ Root: Mask-RCNN-for-Fruit_Detection
 │
 ├── annotations (contains annotation files in JSON and CSV for all the 3 sets)
 │
-├── mask_rcnn_pretrained_weights > mask_rcnn_coco.h5
-│
 └── sets (contains image names for each set)
 ```
 
@@ -84,7 +82,7 @@ Root:
 ## Detailed description of repository content
 - [Codes for training](fruits_train_TF2.ipynb) Mask R-CNN on orchard images and the codes for [running detection](fruits_detect_TF2.ipynb) using trained model.
 - [assets](assets) - This folder logs directory. Logs directory (will) contain models logs are saved here during model training. The folder also contrains history folder.
-	- [logs](assets/logs) - trained model is saved here. For any particular model training instance, a subdirectory will be created and the model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the repository contains  [fruit20200802T0017](assets/logs/fruit20200802T0017) for the model training that was initiated on Aug,2 2020 at 0017H. 
+	- [logs](assets/logs) - trained model is saved here. For any particular model training instance, a subdirectory will be created and the model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the repository contains  [fruits220210518T1629](assets/logs/fruits220210518T1629) for the model training that was initiated on Aug,2 2020 at 0017H. 
 	- [history](assets/history) - this directory holds (or will hold) the training statistics - accuracy and losses. These statistics can also be obtained from Tensorbord [[link]](https://www.tensorflow.org/tensorboard) during and/or after model training.
 
 - [evaluation](evaluation) - Trained model is evaluated using files in this directory. The folder contains the following directories, subdirectories, and files:
@@ -132,7 +130,7 @@ imgaug==0.2.9
 ```
 
 - Download the datasets [[link]](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing) into corresponding folders.
-- [Optional] The trained model `mask_rcnn_fruit_0477.h5` used to generate the results can be downloaded from the [assets section of the release](https://github.com/kipronokoech/Mask-R-CNN-for-Fruit-Detection/releases/download/v2.5.0/mask_rcnn_fruit_0477.h5). If you are interested in reproducing the results without training the model place this file in the [logs](assets/logs/fruits220210518T1629) folder.
+- [Optional] The trained model `mask_rcnn_fruit_0477.h5` used to generate the results can be downloaded from the [assets section of the release](https://github.com/kipronokoech/Mask-R-CNN-for-Fruit-Detection/releases/download/v2.5.0/mask_rcnn_fruits2_0192.h5). If you are interested in reproducing the results without training the model place this file in the [logs](assets/logs/fruits220210518T1629) folder.
 - Evaluation:
 	- Generate per-image truth masks by executing [generate_truth-masks.py](evaluation/generate_truth-masks.py).
 	- Execute [runMain-Loop.py](evaluation/runMain-Loop.py) in order to generate evaluation results. All the evaluation results will be written into [results](evaluation/results) folder.
