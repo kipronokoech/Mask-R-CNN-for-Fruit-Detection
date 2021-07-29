@@ -565,6 +565,8 @@ def unmold_mask(mask, bbox, image_shape):
 
     Returns a binary mask with the same size as the original image.
     """
+    main_mask = mask
+
     threshold = 0.5
     y1, x1, y2, x2 = bbox
     mask = resize(mask, (y2 - y1, x2 - x1))
@@ -573,7 +575,14 @@ def unmold_mask(mask, bbox, image_shape):
     # Put the mask in the right location.
     full_mask = np.zeros(image_shape[:2], dtype=np.bool)
     full_mask[y1:y2, x1:x2] = mask
-    return full_mask
+
+    
+    y1, x1, y2, x2 = bbox
+    main_mask = resize(main_mask, (y2 - y1, x2 - x1))
+    full_mask2 = np.zeros(image_shape[:2], dtype=np.float32)
+    full_mask2[y1:y2, x1:x2] = main_mask
+
+    return full_mask, full_mask2
 
 
 ############################################################

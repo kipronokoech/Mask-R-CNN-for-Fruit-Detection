@@ -17,6 +17,7 @@ class MaskRCNN_Evaluation(object):
     def __init__(self,iou_value=0.5, confidence = 0.90):
         """
         iou_value= iou treshold for TP and otherwise.
+        confidence = confidence threshold
         """
         self.iou_value = iou_value
         self.confidence = confidence

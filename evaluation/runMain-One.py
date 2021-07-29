@@ -25,13 +25,14 @@ confidence = 0.90
 
 set1 = random.choice(["train","val","test"])
 images ="datasets/fruits2"
+output_folder = "fruits2-20210713T1300-0192"
 
-#Path to train and test images respectively/usr/share/man/man1/firefox-esr.1.gz
+#Path to train and test images respectively
 images_path = os.path.join(images,set1)
 
 # Path to the annotation files - for train and test set.
-annotations = os.path.join(images,"{}/via_project_fruits.json".format(set1))
-print("Existence of {} annotation file: ".format(set1),os.path.exists(annotations))
+# annotations = os.path.join(images,"{}/via_project_fruits.json".format(set1))
+# print("Existence of {} annotation file: ".format(set1),os.path.exists(annotations))
 
 # pick an image at random to use it as a test 
 # Skipping the annotation file. Annotation file is named via_project_fruits.json
@@ -45,7 +46,7 @@ print("Existence of {} masks truth: ".format(set1), os.path.exists(truth_masks))
 
 
 #path to prediction masks - the output of Mask R-CNN in output folder is enough for this
-pred_masks  = "./output/fruits2/{}_masks2".format(set1)
+pred_masks  = "./output/{}/{}_masks2".format(output_folder, set1)
 print("Existence of {} masks pred: ".format(set1),os.path.exists(pred_masks))
 
 
@@ -70,7 +71,7 @@ s = MaskConstruction(example_image,example_truth,example_pred,confidence)
 # it is false by default
 s.draw_contours(display=True)
 
-
+# draw rectangular bounding boxes 
 s.drawBbox(display=False)
 # Call MaskEvaluation class
 # This class contains all the function used to evaluate Mask-RCNN
@@ -90,6 +91,9 @@ print("False Negatives", fn)
 # Draw ground-truth masks
 # passs a parameter display = True to view the output. False by default
 s.draw_truth_masks(display=True)
+
+
+
 
 
 exit()

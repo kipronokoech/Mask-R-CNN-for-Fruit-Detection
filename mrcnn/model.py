@@ -21,12 +21,12 @@ import tensorflow.keras.layers as KL
 import tensorflow.keras.utils as KU
 from tensorflow.python.eager import context
 import tensorflow.keras.models as KM
-
+from keras.callbacks import LearningRateScheduler
 from mrcnn import utils
 
-# Requires TensorFlow 2.0+
+# Requires TensorFlow 2.5.0+
 from distutils.version import LooseVersion
-assert LooseVersion(tf.__version__) >= LooseVersion("2.0")
+assert LooseVersion(tf.__version__) >= LooseVersion("2.5.0")
 
 tf.compat.v1.disable_eager_execution()
 
@@ -2152,14 +2152,10 @@ class MaskRCNN(object):
         """Gets the model ready for training. Adds losses, regularization, and
         metrics. Then calls the Keras compile() function.
         """
-        # Learning schedule #kiprono@aims.ac.za
-        lr_schedule = keras.optimizers.schedules.ExponentialDecay(
-        initial_learning_rate=learning_rate,
-        decay_steps=10000,
-        decay_rate=0.9)
+
         # Optimizer object
         optimizer = keras.optimizers.SGD(
-            learning_rate=lr_schedule, momentum=momentum,
+            learning_rate=learning_rate, momentum=momentum,
             clipnorm=self.config.GRADIENT_CLIP_NORM)
         # Add Losses
         loss_names = [
@@ -2332,7 +2328,7 @@ class MaskRCNN(object):
         # Create log_dir if it does not exist
         if not os.path.exists(self.log_dir):
             os.makedirs(self.log_dir)
-
+        
         # Callbacks
         callbacks = [
             keras.callbacks.TensorBoard(log_dir=self.log_dir,

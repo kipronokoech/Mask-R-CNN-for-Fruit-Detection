@@ -21,7 +21,8 @@ matplotlib.rc('font', **font)
 # iou_threshold = 0.5
 confidence_value = 0.90
 
-set2 = "fruits2"
+output_folder = "fruits2-20210713T1300-0192"
+# set2 = output_folder.split("-")[0]
 iou_thresholds = [0.2, 0.3, 0.4, 0.5]
 sets = ["train","val", "test"]
 for iou_threshold in iou_thresholds:
@@ -31,18 +32,18 @@ for iou_threshold in iou_thresholds:
 		# Path to the images - train,val test set
 
 		# there are two sub folders here - train and val
-		images ="datasets/{}".format(set2)
+		images ="datasets/fruits2"
 
 		#Path to train and test images respectively
 		images_path = os.path.join(images,set3)
 
 		#path to ground truth masks - genertaed from the annotation files
 		# You cannot execute this before executing generate_truth-masks.py script
-		truth_masks  = "./evaluation/truth_masks/{}/{}_masks_truth".format(set2,set3)
+		truth_masks  = "./evaluation/truth_masks/fruits2/{}_masks_truth".format(set3)
 		# print(os.path.exists(truth_masks))
 
 		#path to prediction masks - the output of Mask R-CNN in output folder is enough for this
-		pred_masks  = "./output/{}/{}_masks2".format(set2,set3)
+		pred_masks  = "./output/{}/{}_masks2".format(output_folder,set3)
 
 		# Path to the annotation files - for train and test set.
 		set_annotations = os.path.join(images,"{}/via_project_fruits.json".format(set3))
@@ -100,46 +101,3 @@ for iou_threshold in iou_thresholds:
 
 		# Write the confusion matrix into a JSON file
 		ss.WriteConfusionMatrix(images_path, truth_masks, pred_masks, set1=set3)
-
-		# Plot PR curve, pass display = True parameter to display the plot. False by default
-		# the function also returns precision, recall, set2(train or test) and IoU at 
-
-
-
-		###################### END ###############################
-
-		# Everything written below is meant for testing purposes - not essentials
-
-
-
-
-
-
-
-
-		# data2 = {
-		# 			"set": set2,
-		# 			"iou":iou,
-		# 			"precision": list(precision), 
-		# 			"recall": list(recall)
-		# 		}
-		# if not os.path.exists("./evaluation/results/auc/{}{}pr.json".format(set2,iou)):
-		# 	with open("./evaluation/results/auc/{}{}pr.json".format(set2,iou),"w+") as outfile:
-		# 		json.dump(data2, outfile, indent = 3)
-		# else:
-		# 	print("./evaluation/results/auc/{}{}pr.json already exists".format(set2,iou))
-
-
-		# precision, recall,set2, iou = ss.PlotPrecisionRecallCurve(set2="test")
-		# data1 = {
-		# 		"set": set2,
-		# 		"iou":iou,
-		# 		"precision": list(precision), 
-		# 		"recall": list(recall)
-		# 	}
-		# set2, iou = "test", iou_threshold
-		# if not os.path.exists("./evaluation/results/auc/{}{}pr.json".format(set2,iou)):
-		# 	with open("./evaluation/results/auc/{}{}pr.json".format(set2,iou),"w+") as outfile:
-		# 		json.dump(data1, outfile, indent = 3) 
-		# else:
-		# 	print("./evaluation/results/auc/{}{}pr.json already exists".format(set2,iou))
