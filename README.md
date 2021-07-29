@@ -23,7 +23,7 @@ Root: Mask-RCNN-for-Fruit_Detection
 
 ## Sample images in the dataset
 Here are some samples of the images used in this project
-[images]
+[images](orchard_sample_images)
 <table style="width:100%">
   <tr>
     <th><img src="orchard_sample_images/20151124T044642.641468_i2238j1002.png" width=400></th>
