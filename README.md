@@ -117,7 +117,7 @@ python3 -m pip install --upgrade pip
 pip3 install -r requirements.txt
 ```
 ```bash
-requirements.txt:
+requirements.txt has the following package versions:
 
 numpy==1.19.2
 tensorflow==2.5.0   
@@ -132,7 +132,7 @@ imgaug==0.2.9
 ```
 
 - Download the datasets [[link]](https://drive.google.com/drive/folders/1nVDuAx7qNio2drHVjADsG6s6wfZ4tKdH?usp=sharing) into corresponding folders.
-- [Optional] The trained model `mask_rcnn_fruit_0477.h5` used to generate the results can be downloaded from the [assets section of the release](https://github.com/kipronokoech/Mask-R-CNN-for-Fruit-Detection/releases/download/v2.5.0/mask_rcnn_fruit_0477.h5). If you are interested in reproducing the results without training the model place this file in the [logs](assets/logs/fruit20200802T0017) folder.
+- [Optional] The trained model `mask_rcnn_fruit_0477.h5` used to generate the results can be downloaded from the [assets section of the release](https://github.com/kipronokoech/Mask-R-CNN-for-Fruit-Detection/releases/download/v2.5.0/mask_rcnn_fruit_0477.h5). If you are interested in reproducing the results without training the model place this file in the [logs](assets/logs/fruits220210518T1629) folder.
 - Evaluation:
 	- Generate per-image truth masks by executing [generate_truth-masks.py](evaluation/generate_truth-masks.py).
 	- Execute [runMain-Loop.py](evaluation/runMain-Loop.py) in order to generate evaluation results. All the evaluation results will be written into [results](evaluation/results) folder.
