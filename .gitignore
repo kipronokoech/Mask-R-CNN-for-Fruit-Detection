@@ -15,5 +15,4 @@ datasets/fruits2/sets/train.csv
 datasets/fruits2/sets/val.csv
 datasets/fruits2/sets/test.csv
 summary.py
-assets/logs/*
 evaluation/results/*
