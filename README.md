@@ -82,7 +82,7 @@ Root:
 ## Detailed description of repository content
 - [Codes for training](fruits_train_TF2.ipynb) Mask R-CNN on orchard images and the codes for [running detection](fruits_detect_TF2.ipynb) using trained model.
 - [assets](assets) - This folder logs directory. Logs directory (will) contain models logs are saved here during model training. The folder also contrains history folder.
-	- [logs](assets/logs) - trained model is saved here. For any particular model training instance, a subdirectory will be created and the model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the repository contains  [fruits220210518T1629](assets/logs/fruits220210518T1629) for the model training that was initiated on Aug,2 2020 at 0017H. 
+	- [logs](assets/logs) - trained model is saved here. For any particular model training instance, a subdirectory will be created and the model saved at each epoch. The created directory will be named in this format: {class_name}{date}T{time}, for example, the repository contains  [fruits220210518T1629](assets/logs/fruits220210518T1629) for the model training that was initiated on May,18 2021 at 1629H. 
 	- [history](assets/history) - this directory holds (or will hold) the training statistics - accuracy and losses. These statistics can also be obtained from Tensorbord [[link]](https://www.tensorflow.org/tensorboard) during and/or after model training.
 
 - [evaluation](evaluation) - Trained model is evaluated using files in this directory. The folder contains the following directories, subdirectories, and files:
