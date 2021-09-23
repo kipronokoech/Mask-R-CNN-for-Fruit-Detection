@@ -156,3 +156,4 @@ class MaskConstruction(object):
 			plt.imshow(image)
 			plt.show()
 		return image
+

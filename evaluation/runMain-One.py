@@ -18,87 +18,162 @@ matplotlib.rc('font', **font)
 # Change the working dir into the root
 os.chdir("../")
 
-
-# Parameters
 iou_threshold = 0.5
 confidence = 0.90
-kind = "random" # specific or random
-output_folder = None # should be in the output folder, if left none it will default to the latest output
+# Path to the images - both train and test set
+# there are two sub folders here - train and val
 
-
-images_path ="assets/datasets/fruits2"
-
-if kind=="specific":
-    image_name = "_MG_9000_08.jpg" # include extension
-elif kind=="random":
-    image_name = random.choice(os.listdir(os.path.join(images_path, "images")))
+set1 = random.choice(["train","val","test"])
+images ="datasets/fruits2"
+output_folder = "fruits2-20210713T1300-0192"
 
 #Path to train and test images respectively
-image_set_path = [os.path.join(images_path, i) for i in ["train", "val", "test"] if os.path.exists(os.path.join(images_path, i, image_name))][0]
+images_path = os.path.join(images,set1)
 
-image_path = os.path.join(image_set_path, image_name)
-assert os.path.exists(image_path),\
-"Image does not exists"
+# Path to the annotation files - for train and test set.
+# annotations = os.path.join(images,"{}/via_project_fruits.json".format(set1))
+# print("Existence of {} annotation file: ".format(set1),os.path.exists(annotations))
 
-filename, ext = os.path.splitext(image_name)
-setq = image_set_path.split("/")[-1]
+# pick an image at random to use it as a test 
+# Skipping the annotation file. Annotation file is named via_project_fruits.json
+image_name = random.choice([i for i in os.listdir(images_path) if not i.startswith("via")])
+filename , ext = os.path.splitext(image_name)
+print("Filename: ",filename)
+#path to ground truth masks - genertaed from the annotation files
+# You cannot execute this before executing generate_truth-masks.py script
+truth_masks  = "./evaluation/truth_masks/fruits2/{}_masks_truth".format(set1)
+print("Existence of {} masks truth: ".format(set1), os.path.exists(truth_masks))
 
-truth_masks  = "./evaluation/truth_masks/fruits2/{}_masks_truth".format(setq)
 
-# If output folder is not specied we default into the latest output folder available.
-if output_folder is None:
-    assert len(os.listdir("output"))>=1,\
-    "[Info] There is no output. Create the output by running fruit-detections.ipynb file in the Python folder in Root dir."
-
-    from pathlib import Path
-    output_folder = sorted(Path("output").iterdir(), key=os.path.getmtime)[-1]
 #path to prediction masks - the output of Mask R-CNN in output folder is enough for this
-pred_masks  = "{}/{}_masks2".format(output_folder, setq)
-
-# example - just picking one image for testing.
-truth_path = os.path.join(truth_masks,"{}_truth.npy".format(filename))
-if not os.path.exists(truth_path):
-    print("[Info] Truth mask not found. This could be an error or be by design. The later if there are no fruit instances on the image and former if the path is incorrect. Exitting...")
-    exit()
-pred_path = os.path.join(pred_masks,"{}_mask2.npy".format(filename))
-assert os.path.exists(pred_path),"Predicted masks does not exist."
+pred_masks  = "./output/{}/{}_masks2".format(output_folder, set1)
+print("Existence of {} masks pred: ".format(set1),os.path.exists(pred_masks))
 
 
-print("Image path:", image_path)
-print("Pred path", pred_path)
-print("Truth path", truth_path)
+# example - just puicking one image for testing.
+example_image = os.path.join(images_path,image_name)
+example_truth = os.path.join(truth_masks,"{}_truth.npy".format(filename))
+example_pred = os.path.join(pred_masks,"{}_mask2.npy".format(filename))
+
+print("Example image: ", os.path.exists(example_image))
+print("Example truth: ", os.path.exists(example_truth))
+print("Example pred: ", os.path.exists(example_pred))
+
+
 
 # Call MaskConstruction class 
 # This class contains all functions used to reconstruct and draw masks
 # Parameters: image, ground-truth masks,prediction masks and confidence
-s = MaskConstruction(image_path, truth_path, pred_path, confidence)
+s = MaskConstruction(example_image,example_truth,example_pred,confidence)
 
 # Draw prediction masks
 # if you want to view the output pass a parameter display = True
 # it is false by default
 s.draw_contours(display=True)
 
-
+# draw rectangular bounding boxes 
 s.drawBbox(display=False)
 # Call MaskEvaluation class
 # This class contains all the function used to evaluate Mask-RCNN
 # Parameter: IoU threshold
-
-
-# Draw ground-truth masks
-# passs a parameter display = True to view the output. False by default
-s.draw_truth_masks(display=True)
-
-ss= MaskRCNN_Evaluation(save_results_to=None, iou_value=iou_threshold, confidence = confidence)
+ss= MaskRCNN_Evaluation(iou_threshold)
 
 # Confusion matrix
-a = np.load(truth_path, allow_pickle=True)
-b = np.load(pred_path, allow_pickle=True)
-print("Bounding boxes:", [list(i["box"]) for i in b if i["confidence"]>=confidence])
-print("Confidence scores: ", [i["confidence"] for i in b if i["confidence"]>=confidence])
+a = np.load(example_truth, allow_pickle=True)
+b = np.load(example_pred, allow_pickle=True)
+print([i["box"] for i in b if i["confidence"]>=confidence])
+print([i["confidence"] for i in b if i["confidence"]>=confidence])
 
 tp, fp, fn = ss.ConfusionMatrix(truth=a, preds=s.Contors())
 print("True Positives", tp)
 print("False Positives", fp)
 print("False Negatives", fn)
+# Draw ground-truth masks
+# passs a parameter display = True to view the output. False by default
+s.draw_truth_masks(display=True)
 
+
+
+
+
+exit()
+# Write precision and recall into a CSV file
+ss.WriteAndDisplayPR(annotations,pred_masks,truth_masks,images_path,set1=set1,break_num=-1)
+
+
+# Print AP for all-point interpolation method, the function also saves the AP values to evaluation/results
+print(ss.AP_NoInterpolation(set1=set1)["AP"])
+
+# Print AP for 11-point interpolation
+print(ss.AP_11PointInterpolation(set1=set1)["AP"])
+
+
+# Write the confusion matrix into a JSON file
+ss.WriteConfusionMatrix(images_path,truth_masks,pred_masks,set1=set1)
+
+# Plot PR curve, pass display = True parameter to display the plot. False by default
+# the function also returns precision, recall, set1(train or test) and IoU at 
+# different level of confidence.
+precision, recall,set1, iou = ss.PlotPrecisionRecallCurve(set1=set1, display=False)
+
+
+img = cv.imread(example_image)
+bboxes = np.array([i["box"] for i in b])
+confs = np.array([i["confidence"] for i in b])
+bb = np.array([i["mask"] for i in b])
+
+d = []
+for bbox, conf in zip(bboxes, confs):
+	bbox_img = img[bbox[0]:bbox[2],bbox[1]:bbox[3]]
+	r = bbox_img[:,:,0].mean().astype("uint8")
+	g = bbox_img[:,:,1].mean().astype("uint8")
+	b = bbox_img[:,:,2].mean().astype("uint8")
+	rgb = np.mean([r,g,b]).astype("uint8")
+	d.append(rgb+[conf])
+	print(rgb, conf)
+# [378 393 442 455]
+# 410 424
+# bbox[:,:,2] = 255
+
+pd.DataFrame(d).to_csv("/home/kiprono/Desktop/data.csv", index=False)
+
+
+
+
+###################### END ###############################
+
+# Everything written below is meant for testing purposes - not essentials
+
+
+
+
+
+
+
+
+# data2 = {
+# 			"set": set1,
+# 			"iou":iou,
+# 			"precision": list(precision), 
+# 			"recall": list(recall)
+# 		}
+# if not os.path.exists("./evaluation/results/auc/{}{}pr.json".format(set1,iou)):
+# 	with open("./evaluation/results/auc/{}{}pr.json".format(set1,iou),"w+") as outfile:
+# 		json.dump(data2, outfile, indent = 3)
+# else:
+# 	print("./evaluation/results/auc/{}{}pr.json already exists".format(set1,iou))
+
+
+# precision, recall,set1, iou = ss.PlotPrecisionRecallCurve(set1="test")
+# data1 = {
+# 		"set": set1,
+# 		"iou":iou,
+# 		"precision": list(precision), 
+# 		"recall": list(recall)
+# 	}
+# set1, iou = "test", iou_threshold
+# if not os.path.exists("./evaluation/results/auc/{}{}pr.json".format(set1,iou)):
+# 	with open("./evaluation/results/auc/{}{}pr.json".format(set1,iou),"w+") as outfile:
+# 		json.dump(data1, outfile, indent = 3) 
+# else:
+# 	print("./evaluation/results/auc/{}{}pr.json already exists".format(set1,iou))
