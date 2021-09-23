@@ -2,14 +2,15 @@ import json
 import os
 import pandas as pd
 
+# Make sure to have created the folder containing all the results first.
+set1 = "fruits220210921T1549-0131"
 
-set1 = "fruits2498"
 
 confusions = [i for i in os.listdir("results/{}/".format(set1)) if "ConfusionMatrix" in i]
 # a = json.load(open("./results/trainConfusionMatrix%0.85%0.3.json"))
 # quit()
-if os.path.exists("summary_results_{}.json".format(set1)):
-	print("summary_results_{}.json".format(set1), "already exist.Qitting.")
+if os.path.exists("summary_results/summary_results_{}.json".format(set1)):
+	print("summary_results/summary_results_{}.json".format(set1), "already exist.Qitting.")
 	quit()
 	# os.remove("summary_results_{}.json".format(set1))
 
@@ -29,13 +30,14 @@ for confusion in confusions:
 	except:
 		continue
 
-f = open("summary_results_{}.json".format(set1),"a+")
+f = open("summary_results/summary_results_{}.json".format(set1),"a+")
 json.dump(summary_stats,f,indent=3)
 f.close()
 
-df = pd.DataFrame(json.load(open("summary_results_{}.json".format(set1))))
+df = pd.DataFrame(json.load(open("summary_results/summary_results_{}.json".format(set1))))
 df.sort_values(by=["Confidence","IOU","Set"],inplace=True, ascending=False)
 df = df[['Confidence', 'Set', 'IOU','TP(%)','FP(%)','FN',
-        'Total TP', 'Total FP', 'TOtal FN','All Detections', 'All GT']]
-df.to_csv("summary_results_{}.csv".format(set1), index=False)
+				'Total TP', 'Total FP', 'TOtal FN','All Detections', 'All GT']]
+df = df.sort_values(by=["Set", "IOU"])
+df.to_csv("summary_results/summary_results_{}.csv".format(set1), index=False)
 

@@ -1,9 +1,0 @@
-# Ignore everything in this directory
-test/*
-train/*
-val/*
-test.csv
-train.csv
-val.csv
-# Except this file
-!.gitignore
